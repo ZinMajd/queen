@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Http\Controllers\Api\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Display a listing of all users.
+     */
+    public function index()
+    {
+        $users = User::latest()->get();
+        return response()->json($users);
+    }
+
+    /**
+     * Update user status (Approve/Reject Vendors).
+     */
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:active,pending,blocked',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->status = $request->status;
+        $user->save();
+
+        return response()->json([
+            'message' => 'تم تحديث حالة المستخدم بنجاح.',
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * Delete a user.
+     */
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        
+        if ($user->role === 'إدارة') {
+            return response()->json(['message' => 'لا يمكن حذف حساب المسؤول.'], 403);
+        }
+
+        $user->delete();
+        return response()->json(['message' => 'تم حذف المستخدم بنجاح.']);
+    }
+}

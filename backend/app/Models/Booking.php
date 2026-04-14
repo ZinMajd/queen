@@ -11,6 +11,10 @@ class Booking extends Model
         'dress_id',
         'service_id',
         'booking_date',
+        'delivery_method',
+        'delivery_address',
+        'payment_method',
+        'total_amount',
         'status'
     ];
 

@@ -31,13 +31,33 @@ class BookingController extends Controller
             'dress_id' => 'nullable|exists:dresses,id',
             'service_id' => 'nullable|exists:services,id',
             'booking_date' => 'required|date|after_or_equal:today',
+            'delivery_method' => 'required|string',
+            'delivery_address' => 'nullable|string',
+            'payment_method' => 'required|string',
         ]);
+
+        // Double Booking Prevention Check
+        if ($request->dress_id) {
+            $isBooked = Booking::where('dress_id', $request->dress_id)
+                ->where('booking_date', $request->booking_date)
+                ->where('status', '!=', 'cancelled')
+                ->exists();
+            
+            if ($isBooked) {
+                return response()->json([
+                    'message' => 'عذراً، هذا الفستان محجوز بالفعل في التاريخ المختار. يرجى اختيار تاريخ آخر أو فستان آخر.'
+                ], 422);
+            }
+        }
 
         $booking = Booking::create([
             'user_id' => Auth::id(),
             'dress_id' => $request->dress_id,
             'service_id' => $request->service_id,
             'booking_date' => $request->booking_date,
+            'delivery_method' => $request->delivery_method,
+            'delivery_address' => $request->delivery_address,
+            'payment_method' => $request->payment_method,
             'status' => 'pending'
         ]);
 

@@ -15,6 +15,13 @@ import Dashboard from './pages/admin/Dashboard';
 import ManageDresses from './pages/admin/ManageDresses';
 import ManageCategories from './pages/admin/ManageCategories';
 import ManageBookings from './pages/admin/ManageBookings';
+import ManageUsers from './pages/admin/ManageUsers';
+
+// Vendor Pages
+import VendorLayout from './components/VendorLayout';
+import VendorDashboard from './pages/vendor/VendorDashboard';
+import VendorServices from './pages/vendor/VendorServices';
+import VendorBookings from './pages/vendor/VendorBookings';
 
 function App() {
   return (
@@ -33,11 +40,18 @@ function App() {
 
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
-            <index element={<Dashboard />} />
             <Route index element={<Dashboard />} />
             <Route path="dresses" element={<ManageDresses />} />
             <Route path="categories" element={<ManageCategories />} />
             <Route path="bookings" element={<ManageBookings />} />
+            <Route path="users" element={<ManageUsers />} />
+          </Route>
+
+          {/* Vendor Routes */}
+          <Route path="/vendor" element={<VendorLayout />}>
+            <Route index element={<VendorDashboard />} />
+            <Route path="services" element={<VendorServices />} />
+            <Route path="bookings" element={<VendorBookings />} />
           </Route>
         </Routes>
       </div>

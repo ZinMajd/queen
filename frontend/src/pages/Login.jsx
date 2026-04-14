@@ -61,13 +61,19 @@ const Login = () => {
             <p className="text-slate-500 font-medium text-lg">أهلاً بكِ، أدخلي بياناتكِ للمتابعة</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
+            {/* Near-invisible decoy fields (not display:none to fool smart browsers) */}
+            <input type="text" name="prevent_autofill" style={{ opacity: 0, position: 'absolute', height: 0, width: 0, zIndex: -1 }} />
+            <input type="password" name="password_fake" style={{ opacity: 0, position: 'absolute', height: 0, width: 0, zIndex: -1 }} />
+
             <div className="text-right">
               <label className="block text-slate-700 font-bold mb-2 mr-2">البريد الإلكتروني</label>
               <div className="relative">
                 <input 
-                  type="email" 
+                  type="text" 
+                  name="user_identifier"
                   required
+                  autoComplete="chrome-off"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
@@ -82,7 +88,9 @@ const Login = () => {
               <div className="relative">
                 <input 
                   type="password" 
+                  name="user_security_token"
                   required
+                  autoComplete="new-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"

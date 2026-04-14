@@ -91,15 +91,23 @@ const Register = () => {
 
             <div className="text-right mt-4">
               <label className="block text-slate-700 font-bold mb-1.5 mr-2 text-sm">نوع الحساب</label>
-              <div className="flex gap-4">
-                <label className={`flex-1 p-3 rounded-2xl border-2 cursor-pointer transition-all ${formData.role === 'عروس' ? 'border-rose-500 bg-rose-50' : 'border-slate-100 bg-slate-100 hover:bg-slate-200'}`}>
-                  <input type="radio" name="role" value="عروس" checked={formData.role === 'عروس'} onChange={handleChange} className="hidden" />
-                  <div className="text-center font-bold text-slate-800">عروس (زائر)</div>
-                </label>
-                <label className={`flex-1 p-3 rounded-2xl border-2 cursor-pointer transition-all ${formData.role === 'مزود خدمة' ? 'border-rose-500 bg-rose-50' : 'border-slate-100 bg-slate-100 hover:bg-slate-200'}`}>
-                  <input type="radio" name="role" value="مزود خدمة" checked={formData.role === 'مزود خدمة'} onChange={handleChange} className="hidden" />
-                  <div className="text-center font-bold text-slate-800">مزود خدمة</div>
-                </label>
+              <div className="relative">
+                <select 
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="w-full bg-slate-100 border-2 border-transparent focus:border-rose-500 focus:bg-white rounded-2xl py-3.5 pr-12 pl-4 outline-none transition-all font-bold text-slate-800 appearance-none cursor-pointer"
+                >
+                  <option value="عروس">عروس (زائر)</option>
+                  <option value="مزود خدمة">مزود خدمة</option>
+                </select>
+                <div className="absolute right-4 top-3.5 text-slate-400 pointer-events-none">
+                  <User size={22} />
+                </div>
+                {/* Custom arrow for the dropdown */}
+                <div className="absolute left-4 top-4.5 text-slate-400 pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
               </div>
             </div>
 
@@ -110,6 +118,7 @@ const Register = () => {
                   type="email" 
                   name="email"
                   required
+                  autoComplete="off"
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="name@example.com"
@@ -126,6 +135,7 @@ const Register = () => {
                   type="tel" 
                   name="phone"
                   required
+                  autoComplete="off"
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="77XXXXXXX"
@@ -142,6 +152,7 @@ const Register = () => {
                   type="password" 
                   name="password"
                   required
+                  autoComplete="new-password"
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="كلمة مرور قوية"
@@ -158,6 +169,7 @@ const Register = () => {
                   type="password" 
                   name="password_confirmation"
                   required
+                  autoComplete="new-password"
                   value={formData.password_confirmation}
                   onChange={handleChange}
                   placeholder="أعيدي كتابة كلمة المرور"

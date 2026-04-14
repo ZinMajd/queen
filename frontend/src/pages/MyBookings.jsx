@@ -10,25 +10,40 @@ import {
   Info,
   Package,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  MapPin,
+  CreditCard,
+  MessageSquare,
+  Truck
 } from 'lucide-react';
 import api from '../api/api';
 
 const StatusBadge = ({ status }) => {
   const statusConfig = {
-    pending: { label: 'قيد الانتظار', color: 'bg-amber-50 text-amber-600 border-amber-100', icon: Clock },
-    confirmed: { label: 'تم التأكيد', color: 'bg-green-50 text-green-600 border-green-100', icon: CheckCircle2 },
-    cancelled: { label: 'ملغي', color: 'bg-rose-50 text-rose-600 border-rose-100', icon: XCircle },
-    completed: { label: 'مكتمل', color: 'bg-blue-50 text-blue-600 border-blue-100', icon: Package }
+    pending: { label: 'طلب جديد', color: 'bg-amber-50 text-amber-600 border-amber-100', icon: Clock, progress: 25 },
+    confirmed: { label: 'تم التحقق', color: 'bg-blue-50 text-blue-600 border-blue-100', icon: Info, progress: 50 },
+    processing: { label: 'قيد التجهيز', color: 'bg-indigo-50 text-indigo-600 border-indigo-100', icon: Sparkles, progress: 75 },
+    completed: { label: 'تم التسليم', color: 'bg-green-50 text-green-600 border-green-100', icon: CheckCircle2, progress: 100 },
+    cancelled: { label: 'ملغي', color: 'bg-rose-50 text-rose-600 border-rose-100', icon: XCircle, progress: 0 }
   };
 
   const config = statusConfig[status] || statusConfig.pending;
   const Icon = config.icon;
 
   return (
-    <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-black ${config.color}`}>
-      <Icon size={16} />
-      {config.label}
+    <div className="space-y-3">
+      <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-black ${config.color}`}>
+        <Icon size={16} />
+        {config.label}
+      </div>
+      {status !== 'cancelled' && (
+        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+          <div 
+            className={`h-full transition-all duration-1000 ${status === 'completed' ? 'bg-green-500' : 'bg-rose-500'}`} 
+            style={{ width: `${config.progress}%` }} 
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -136,15 +151,23 @@ const MyBookings = () => {
                     {booking.dress?.name || booking.service?.name}
                   </h3>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex items-center gap-3 justify-end text-slate-600 font-bold bg-slate-50 px-5 py-3 rounded-2xl">
                       <span>{new Date(booking.booking_date).toLocaleDateString('ar-YE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                      <Calendar size={20} className="text-rose-600" />
+                      <Calendar size={18} className="text-rose-500" />
                     </div>
-                    {booking.dress && (
-                      <div className="flex items-center gap-3 justify-end text-slate-600 font-bold bg-slate-50 px-5 py-3 rounded-2xl">
-                        <span>نوع الطلب: {booking.dress.type}</span>
-                        <Sparkles size={20} className="text-rose-600" />
+                    <div className="flex items-center gap-3 justify-end text-slate-600 font-bold bg-slate-50 px-5 py-3 rounded-2xl">
+                        <span>الاستلام: {booking.delivery_method}</span>
+                        <Truck size={18} className="text-rose-500" />
+                    </div>
+                    <div className="flex items-center gap-3 justify-end text-slate-600 font-bold bg-slate-50 px-5 py-3 rounded-2xl">
+                        <span>الدفع: {booking.payment_method}</span>
+                        <CreditCard size={18} className="text-rose-500" />
+                    </div>
+                    {booking.delivery_address && (
+                      <div className="flex items-center gap-3 justify-end text-slate-600 font-bold bg-slate-50 px-5 py-3 rounded-2xl md:col-span-2">
+                        <span className="text-sm truncate max-w-xs">{booking.delivery_address}</span>
+                        <MapPin size={18} className="text-rose-500" />
                       </div>
                     )}
                   </div>

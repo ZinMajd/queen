@@ -23,4 +23,17 @@ class DressController extends Controller
     {
         return response()->json(Dress::with('category')->findOrFail($id));
     }
+
+    /**
+     * Get all booked dates for a specific dress.
+     */
+    public function getBookedDates($id)
+    {
+        $bookedDates = \App\Models\Booking::where('dress_id', $id)
+            ->where('status', '!=', 'cancelled')
+            ->pluck('booking_date')
+            ->toArray();
+
+        return response()->json($bookedDates);
+    }
 }

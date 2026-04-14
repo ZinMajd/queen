@@ -9,7 +9,8 @@ const MediaRenderer = ({ src, alt, className }) => {
     return <div className={`${className} bg-slate-200 animate-pulse rounded-2xl`} />;
   }
 
-  const isVideo = src.toLowerCase().endsWith('.mp4') || src.toLowerCase().endsWith('.webm');
+  const srcString = String(src || '').toLowerCase();
+  const isVideo = srcString.endsWith('.mp4') || srcString.endsWith('.webm');
   const fullSrc = src.startsWith('http') ? src : `http://localhost:8000${src}`;
 
   if (isVideo) {
