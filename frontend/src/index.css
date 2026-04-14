@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -6,6 +6,7 @@
 }
 
 body {
-  @apply bg-slate-50 text-slate-900;
+  background-color: var(--color-slate-50);
+  color: var(--color-slate-900);
   direction: rtl;
 }

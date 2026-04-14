@@ -13,6 +13,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { getServices } from '../api/api';
+import MediaRenderer from '../components/MediaRenderer';
 
 const ServiceIcon = ({ type, size = 24, className = "" }) => {
   switch (type) {
@@ -75,16 +76,16 @@ const Services = () => {
             {services.map((service, index) => (
               <div 
                 key={service.id} 
-                className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} bg-white rounded-[3rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 border border-slate-100 group`}
+                className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} bg-white rounded-5xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 border border-slate-100 group`}
               >
                 {/* Image Section */}
-                <div className="lg:w-1/2 relative h-[30rem] overflow-hidden">
-                  <img 
+                <div className="lg:w-1/2 relative h-120 overflow-hidden">
+                  <MediaRenderer 
                     src={service.image} 
                     alt={service.name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="absolute bottom-10 right-10 left-10 text-white">
                     <div className="bg-white/20 backdrop-blur-md inline-flex p-4 rounded-3xl mb-4">
                       <ServiceIcon type={service.service_type} size={32} className="text-white" />
@@ -136,7 +137,7 @@ const Services = () => {
         )}
 
         {/* Contact CTA */}
-        <div className="mt-32 bg-rose-600 rounded-[4rem] p-12 lg:p-20 text-center text-white relative overflow-hidden shadow-2xl">
+        <div className="mt-32 bg-rose-600 rounded-5xl p-12 lg:p-20 text-center text-white relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
           <div className="absolute bottom-0 right-0 w-64 h-64 bg-black/10 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>
           

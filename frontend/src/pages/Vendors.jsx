@@ -39,7 +39,7 @@ const Vendors = () => {
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-slate-100 sticky top-0 z-50">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-slate-100 sticky top-0 z-100">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <Link to="/" className="text-3xl font-black text-rose-600 tracking-tighter italic">الملكة</Link>
           <Link to="/" className="flex items-center gap-2 text-slate-600 hover:text-rose-600 font-bold transition-colors">
@@ -63,12 +63,12 @@ const Vendors = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
           {vendors.map((vendor) => (
-            <div key={vendor.id} className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 group">
+            <div key={vendor.id} className="bg-white rounded-4xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 group">
               <div className="relative h-64 overflow-hidden">
                 <img 
                   src={vendor.image} 
                   alt={vendor.name} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
                 {vendor.featured && (

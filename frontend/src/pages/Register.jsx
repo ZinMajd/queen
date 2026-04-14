@@ -51,7 +51,7 @@ const Register = () => {
             className="w-full h-full object-cover opacity-30"
             alt=""
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 to-rose-600/60"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-slate-900/90 to-rose-600/60"></div>
         </div>
         
         <div className="relative z-10 text-right text-white max-w-lg">

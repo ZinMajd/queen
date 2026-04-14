@@ -30,3 +30,11 @@ Route::get('/dresses/{id}', [DressController::class, 'show']);
 // Service Routes
 Route::get('/services', [ServiceController::class, 'index']);
 Route::get('/services/{id}', [ServiceController::class, 'show']);
+
+// Admin Routes
+Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Api\Admin\DashboardController::class, 'index']);
+    Route::apiResource('/dresses', \App\Http\Controllers\Api\Admin\DressController::class);
+    Route::apiResource('/categories', \App\Http\Controllers\Api\Admin\CategoryController::class);
+    Route::apiResource('/bookings', \App\Http\Controllers\Api\Admin\BookingController::class);
+});

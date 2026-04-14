@@ -40,7 +40,7 @@ const Login = () => {
             className="w-full h-full object-cover opacity-20 scale-110"
             alt=""
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-rose-600/80 to-slate-900/80"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-rose-600/80 to-slate-900/80"></div>
         </div>
         
         <div className="relative z-10 text-right text-white max-w-lg">

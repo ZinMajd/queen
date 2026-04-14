@@ -43,10 +43,10 @@ const BookingModal = ({ dress, service, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
+    <div className="fixed inset-0 z-100 flex items-center justify-center px-6">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}></div>
       
-      <div className="relative bg-white w-full max-w-xl rounded-[3rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="relative bg-white w-full max-w-xl rounded-5xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
         {success ? (
           <div className="p-12 text-center">
             <div className="bg-green-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
@@ -78,7 +78,7 @@ const BookingModal = ({ dress, service, onClose }) => {
                 <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-sm">
                   <img src={dress?.image || service?.image} alt="" className="w-full h-full object-cover" />
                 </div>
-                <div className="text-right flex-grow">
+                <div className="text-right grow">
                   <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">العنصر المختار</p>
                   <h3 className="text-xl font-bold text-slate-900">{dress?.name || service?.name}</h3>
                 </div>
@@ -110,7 +110,7 @@ const BookingModal = ({ dress, service, onClose }) => {
               <button 
                 type="submit"
                 disabled={loading}
-                className="w-full bg-slate-900 hover:bg-rose-600 text-white py-6 rounded-[2rem] text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 hover:-translate-y-1 active:scale-95 disabled:opacity-50"
+                className="w-full bg-slate-900 hover:bg-rose-600 text-white py-6 rounded-4xl text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 hover:-translate-y-1 active:scale-95 disabled:opacity-50"
               >
                 {loading ? (
                   <Loader2 className="animate-spin" size={24} />

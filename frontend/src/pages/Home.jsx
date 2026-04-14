@@ -2,19 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Heart, Stars, Camera, Scissors, MapPin, Phone, MessageSquare, Loader2, User, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getCategories, logout as logoutApi } from '../api/api';
-
-const MediaRenderer = ({ src, alt, className }) => {
-  if (!src) return <div className={`${className} bg-slate-200 animate-pulse`} />;
-  const isVideo = src.toLowerCase().endsWith('.mp4');
-  const fullSrc = src.startsWith('http') ? src : `http://localhost:8000${src}`;
-
-  if (isVideo) {
-    return (
-      <video src={fullSrc} className={className} autoPlay muted loop playsInline />
-    );
-  }
-  return <img src={fullSrc} alt={alt} className={className} />;
-};
+import MediaRenderer from '../components/MediaRenderer';
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
@@ -96,11 +84,11 @@ const Home = () => {
       </div>
 
       {/* Hero Section */}
-      <section className="relative h-[100vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <MediaRenderer 
             src="/uploads/dresses/واجهه رئيسية.png" 
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
@@ -114,7 +102,7 @@ const Home = () => {
           </p>
           <button 
             onClick={() => navigate('/dresses')}
-            className="bg-white text-slate-900 hover:bg-rose-600 hover:text-white px-12 py-5 rounded-[2.5rem] text-xl font-black transition-all shadow-2xl hover:scale-105 active:scale-95 flex items-center gap-4 mx-auto"
+            className="bg-white text-slate-900 hover:bg-rose-600 hover:text-white px-12 py-5 rounded-4xl text-xl font-black transition-all shadow-2xl hover:scale-105 active:scale-95 flex items-center gap-4 mx-auto"
           >
             تصفحي الكولكشن
             <Stars size={24} />
@@ -138,7 +126,7 @@ const Home = () => {
       <section className="py-32 bg-slate-50">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div className="text-right">
+            <div className="text-right grow">
               <h2 className="text-5xl font-black text-slate-900 mb-4">اختاري مناسبتكِ</h2>
               <p className="text-xl text-slate-500 font-medium">مجموعات مختارة بعناية لكل لحظة سعيدة</p>
             </div>
@@ -155,7 +143,7 @@ const Home = () => {
                 <div 
                   key={item.id} 
                   onClick={() => navigate(`/dresses/${item.id}`)}
-                  className="group cursor-pointer bg-white rounded-[3rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-slate-100 flex flex-col h-[32rem]"
+                  className="group cursor-pointer bg-white rounded-5xl overflow-hidden shadow-sm hover:shadow-2xl transition-all border border-slate-100 flex flex-col h-128"
                 >
                   <div className="relative h-full overflow-hidden">
                     <MediaRenderer 
@@ -163,7 +151,7 @@ const Home = () => {
                       alt={item.name} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
                     <div className="absolute bottom-8 right-8 text-white">
                       <h3 className="text-3xl font-black uppercase mb-2">{item.name}</h3>
                       <button className="bg-white/20 backdrop-blur-md px-6 py-2 rounded-xl text-sm font-bold opacity-0 group-hover:opacity-100 transition-all -translate-y-4 group-hover:translate-y-0">اكتشفي الآن</button>
@@ -190,7 +178,7 @@ const Home = () => {
               <div 
                 key={index} 
                 onClick={() => navigate('/services')}
-                className="group flex flex-col items-center p-12 rounded-[3.5rem] bg-slate-50 hover:bg-white transition-all cursor-pointer border-2 border-transparent hover:border-rose-100 shadow-sm hover:shadow-2xl"
+                className="group flex flex-col items-center p-12 rounded-5xl bg-slate-50 hover:bg-white transition-all cursor-pointer border-2 border-transparent hover:border-rose-100 shadow-sm hover:shadow-2xl"
               >
                 <div className="bg-white p-8 rounded-3xl mb-8 group-hover:bg-rose-600 group-hover:text-white group-hover:scale-110 transition-all shadow-md group-hover:shadow-rose-200">
                   <service.icon size={48} className="text-rose-600 group-hover:text-white transition-colors" />

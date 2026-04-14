@@ -21,6 +21,15 @@ export default {
           950: '#4c0519',
         },
       },
+      borderRadius: {
+        '4xl': '2rem',
+        '5xl': '3rem',
+      },
+      spacing: {
+        '112': '28rem',
+        '120': '30rem',
+        '128': '32rem',
+      },
     },
   },
   plugins: [],

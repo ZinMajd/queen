@@ -2,25 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, Filter, ArrowRight, ArrowLeft, Loader2, Search } from 'lucide-react';
 import { getDresses, getCategories } from '../api/api';
-
-const MediaRenderer = ({ src, alt, className }) => {
-  const isVideo = src?.toLowerCase().endsWith('.mp4');
-  const fullSrc = src?.startsWith('http') ? src : `http://localhost:8000${src}`;
-
-  if (isVideo) {
-    return (
-      <video 
-        src={fullSrc} 
-        className={className} 
-        autoPlay 
-        muted 
-        loop 
-        playsInline
-      />
-    );
-  }
-  return <img src={fullSrc} alt={alt} className={className} />;
-};
+import MediaRenderer from '../components/MediaRenderer';
 
 const DressList = () => {
   const { categoryId } = useParams();
@@ -113,7 +95,7 @@ const DressList = () => {
             <Loader2 className="animate-spin text-rose-600" size={64} />
           </div>
         ) : dresses.length === 0 ? (
-          <div className="text-center py-40 bg-white rounded-[3rem] shadow-sm border border-slate-100 flex flex-col items-center">
+          <div className="text-center py-40 bg-white rounded-4xl shadow-sm border border-slate-100 flex flex-col items-center">
             <div className="bg-rose-50 p-8 rounded-full mb-8">
                 <Heart className="text-rose-300" size={80} />
             </div>
@@ -129,8 +111,8 @@ const DressList = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
             {dresses.map((dress) => (
-              <div key={dress.id} className="group bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 border border-slate-100 flex flex-col">
-                <div className="relative h-[28rem] overflow-hidden">
+              <div key={dress.id} className="group bg-white rounded-4xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 border border-slate-100 flex flex-col">
+                <div className="relative h-112 overflow-hidden">
                   <MediaRenderer 
                     src={dress.image} 
                     alt={dress.name} 
@@ -146,10 +128,10 @@ const DressList = () => {
                       {dress.type}
                     </span>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
 
-                <div className="p-8 flex flex-col flex-grow text-right">
+                <div className="p-8 flex flex-col grow text-right">
                   <div className="mb-4">
                     <span className="text-rose-500 text-xs font-bold uppercase tracking-widest">{dress.category?.name}</span>
                     <h3 className="text-2xl font-black text-slate-900 mt-1 leading-tight group-hover:text-rose-600 transition-colors uppercase">

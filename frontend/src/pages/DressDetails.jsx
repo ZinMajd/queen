@@ -16,27 +16,7 @@ import {
 } from 'lucide-react';
 import { getDress } from '../api/api';
 import BookingModal from '../components/BookingModal';
-
-const MediaRenderer = ({ src, alt, className }) => {
-  if (!src) return <div className={`${className} bg-slate-200 animate-pulse`} />;
-  const isVideo = src.toLowerCase().endsWith('.mp4');
-  const fullSrc = src.startsWith('http') ? src : `http://localhost:8000${src}`;
-
-  if (isVideo) {
-    return (
-      <video 
-        src={fullSrc} 
-        className={className} 
-        autoPlay 
-        muted 
-        loop 
-        playsInline
-        controls={false}
-      />
-    );
-  }
-  return <img src={fullSrc} alt={alt} className={className} />;
-};
+import MediaRenderer from '../components/MediaRenderer';
 
 const DressDetails = () => {
   const { id } = useParams();
@@ -70,7 +50,7 @@ const DressDetails = () => {
   if (!dress) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center bg-slate-50 text-center px-6">
-        <div className="bg-white p-12 rounded-[3rem] shadow-xl border border-slate-100 max-w-lg">
+        <div className="bg-white p-12 rounded-5xl shadow-xl border border-slate-100 max-w-lg">
           <Info className="mx-auto text-slate-200 mb-6" size={80} />
           <h2 className="text-3xl font-black text-slate-800 mb-4">عذراً، الفستان غير موجود</h2>
           <p className="text-slate-500 mb-8">ربما تم حذف الفستان أو المسار غير صحيح.</p>
@@ -106,7 +86,7 @@ const DressDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Media Section */}
           <div className="relative group">
-            <div className="sticky top-28 rounded-[3.5rem] overflow-hidden shadow-2xl bg-slate-100 aspect-[3/4] border-8 border-slate-50">
+            <div className="sticky top-28 rounded-5xl overflow-hidden shadow-2xl bg-slate-100 aspect-3/4 border-8 border-slate-50">
               <MediaRenderer 
                 src={dress.image} 
                 alt={dress.name} 
@@ -141,7 +121,7 @@ const DressDetails = () => {
             </div>
 
             <div className="space-y-8 mb-12">
-              <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+              <div className="bg-slate-50 p-8 rounded-4xl border border-slate-100 shadow-sm">
                 <p className="text-slate-600 leading-relaxed text-lg italic">
                   "{dress.description}"
                 </p>
@@ -163,17 +143,17 @@ const DressDetails = () => {
             <div className="sticky bottom-6 lg:relative lg:bottom-0 space-y-4">
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="w-full bg-slate-900 hover:bg-rose-600 text-white py-6 rounded-[2rem] text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 hover:-translate-y-1 active:scale-95 group"
+                className="w-full bg-slate-900 hover:bg-rose-600 text-white py-6 rounded-4xl text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 hover:-translate-y-1 active:scale-95 group"
               >
                 <Calendar size={24} className="group-hover:rotate-12 transition-transform" />
                 حجز موعد للقياس
               </button>
               
               <div className="flex gap-4">
-                <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-[2rem] font-bold transition-all flex items-center justify-center gap-3">
+                <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-4xl font-bold transition-all flex items-center justify-center gap-3">
                   <MessageCircle size={20} /> استفسار واتساب
                 </button>
-                <button className="flex-1 bg-white border-2 border-slate-900 text-slate-900 py-5 rounded-[2rem] font-bold hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-3">
+                <button className="flex-1 bg-white border-2 border-slate-900 text-slate-900 py-5 rounded-4xl font-bold hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-3">
                   <Phone size={20} /> اتصال هاتفي
                 </button>
               </div>

@@ -91,7 +91,7 @@ const MyBookings = () => {
             <Loader2 className="animate-spin text-rose-600" size={64} />
           </div>
         ) : bookings.length === 0 ? (
-          <div className="bg-white rounded-[3rem] p-20 text-center border border-slate-100 shadow-sm animate-in fade-in zoom-in duration-500">
+          <div className="bg-white rounded-5xl p-20 text-center border border-slate-100 shadow-sm animate-in fade-in zoom-in duration-500">
             <div className="bg-slate-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8">
               <Package className="text-slate-300" size={48} />
             </div>
@@ -111,7 +111,7 @@ const MyBookings = () => {
             {bookings.map((booking) => (
               <div 
                 key={booking.id} 
-                className="bg-white rounded-[2.5rem] p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm hover:shadow-xl transition-all border border-slate-100 group overflow-hidden relative"
+                className="bg-white rounded-4xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm hover:shadow-xl transition-all border border-slate-100 group overflow-hidden relative"
               >
                 {/* Image */}
                 <div className="w-full md:w-40 h-48 md:h-40 rounded-3xl overflow-hidden shrink-0 shadow-md">
@@ -123,7 +123,7 @@ const MyBookings = () => {
                 </div>
 
                 {/* Info */}
-                <div className="flex-grow text-right space-y-4">
+                <div className="grow text-right space-y-4">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <StatusBadge status={booking.status} />
                     <div className="text-slate-400 text-sm font-bold flex items-center gap-2 justify-end">
@@ -165,7 +165,7 @@ const MyBookings = () => {
         )}
 
         {/* Support Banner */}
-        <div className="mt-20 bg-slate-900 rounded-[3rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8 text-white relative overflow-hidden shadow-2xl">
+        <div className="mt-20 bg-slate-900 rounded-5xl p-10 flex flex-col md:flex-row items-center justify-between gap-8 text-white relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-rose-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           <div className="relative z-10 text-right">
             <h3 className="text-2xl font-black mb-3">هل لديكِ استفسار عن حجزكِ؟</h3>
