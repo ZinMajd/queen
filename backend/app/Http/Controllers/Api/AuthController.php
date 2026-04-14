@@ -14,12 +14,15 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
+        $status = $request->role === 'مزود خدمة' ? 'pending' : 'active';
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'status' => $status,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -38,6 +41,18 @@ class AuthController extends Controller
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['البريد الإلكتروني أو كلمة المرور غير صحيحة.'],
+            ]);
+        }
+
+        if ($user->role === 'مزود خدمة' && $user->status === 'pending') {
+            throw ValidationException::withMessages([
+                'email' => ['حسابك قيد المراجعة حالياً. يرجى الانتظار حتى يتم تفعيله.'],
+            ]);
+        }
+
+        if ($user->status === 'rejected') {
+            throw ValidationException::withMessages([
+                'email' => ['تم رفض حسابك. يرجى التواصل مع الإدارة.'],
             ]);
         }
 

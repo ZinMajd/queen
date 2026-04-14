@@ -21,7 +21,10 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(response.data.user));
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'فشل تسجيل الدخول. يرجى التأكد من البيانات.');
+      const errorMessage = err.response?.data?.errors 
+        ? Object.values(err.response.data.errors).flat().join(' ')
+        : err.response?.data?.message || 'فشل تسجيل الدخول. يرجى التأكد من البيانات.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

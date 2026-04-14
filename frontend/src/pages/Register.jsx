@@ -89,6 +89,20 @@ const Register = () => {
               </div>
             </div>
 
+            <div className="text-right mt-4">
+              <label className="block text-slate-700 font-bold mb-1.5 mr-2 text-sm">نوع الحساب</label>
+              <div className="flex gap-4">
+                <label className={`flex-1 p-3 rounded-2xl border-2 cursor-pointer transition-all ${formData.role === 'عروس' ? 'border-rose-500 bg-rose-50' : 'border-slate-100 bg-slate-100 hover:bg-slate-200'}`}>
+                  <input type="radio" name="role" value="عروس" checked={formData.role === 'عروس'} onChange={handleChange} className="hidden" />
+                  <div className="text-center font-bold text-slate-800">عروس (زائر)</div>
+                </label>
+                <label className={`flex-1 p-3 rounded-2xl border-2 cursor-pointer transition-all ${formData.role === 'مزود خدمة' ? 'border-rose-500 bg-rose-50' : 'border-slate-100 bg-slate-100 hover:bg-slate-200'}`}>
+                  <input type="radio" name="role" value="مزود خدمة" checked={formData.role === 'مزود خدمة'} onChange={handleChange} className="hidden" />
+                  <div className="text-center font-bold text-slate-800">مزود خدمة</div>
+                </label>
+              </div>
+            </div>
+
             <div className="text-right">
               <label className="block text-slate-700 font-bold mb-1.5 mr-2 text-sm">البريد الإلكتروني</label>
               <div className="relative">
