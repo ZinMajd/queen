@@ -16,6 +16,26 @@ class DressController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', $searchTerm)
+                  ->orWhere('description', 'like', $searchTerm);
+            });
+        }
+
+        if ($request->has('type') && !empty($request->type)) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->has('size') && !empty($request->size)) {
+            $query->where('size', $request->size);
+        }
+
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+
         return response()->json($query->with('category')->get());
     }
 

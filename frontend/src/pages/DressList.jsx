@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Heart, Filter, ArrowRight, ArrowLeft, Loader2, Search } from 'lucide-react';
+import { Heart, Filter, ArrowRight, ArrowLeft, Loader2, Search, X } from 'lucide-react';
 import { getDresses, getCategories } from '../api/api';
 import MediaRenderer from '../components/MediaRenderer';
 
@@ -10,6 +10,14 @@ const DressList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState(categoryId || 'all');
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    type: '',
+    size: '',
+    status: ''
+  });
 
   useEffect(() => {
     if (categoryId) {
@@ -21,8 +29,16 @@ const DressList = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        const queryParams = {
+            ...(activeCategory !== 'all' ? { category_id: activeCategory } : {}),
+            ...(searchTerm ? { search: searchTerm } : {}),
+            ...(filters.type ? { type: filters.type } : {}),
+            ...(filters.size ? { size: filters.size } : {}),
+            ...(filters.status ? { status: filters.status } : {})
+        };
+
         const [dressesRes, categoriesRes] = await Promise.all([
-          getDresses(activeCategory !== 'all' ? { category_id: activeCategory } : {}),
+          getDresses(queryParams),
           getCategories()
         ]);
         setDresses(dressesRes.data);
@@ -33,8 +49,13 @@ const DressList = () => {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [activeCategory]);
+    
+    const delayDebounceFn = setTimeout(() => {
+      fetchData();
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [activeCategory, searchTerm, filters]);
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
@@ -50,9 +71,19 @@ const DressList = () => {
           <div className="relative w-full md:w-96">
             <input 
               type="text" 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="ابحثي عن فستان أحلامك..." 
               className="w-full pr-12 pl-4 py-3 bg-slate-100 border-none rounded-2xl focus:ring-2 focus:ring-rose-500 focus:bg-white transition-all outline-none"
             />
+            {searchTerm && (
+              <button 
+                onClick={() => setSearchTerm('')}
+                className="absolute left-4 top-3.5 text-slate-400 hover:text-rose-500"
+              >
+                <X size={20} />
+              </button>
+            )}
             <Search className="absolute right-4 top-3.5 text-slate-400" size={20} />
           </div>
         </div>
@@ -85,10 +116,81 @@ const DressList = () => {
                 {activeCategory === 'all' ? 'جميع الفساتين' : categories.find(c => c.id.toString() === activeCategory)?.name}
             </h1>
           </div>
-          <button className="flex items-center gap-2 text-slate-700 bg-white px-6 py-3 rounded-2xl border border-slate-200 hover:bg-slate-50 shadow-sm transition-all active:scale-95">
+          <button 
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex items-center gap-2 px-6 py-3 rounded-2xl border transition-all active:scale-95 shadow-sm
+              ${showFilters || Object.values(filters).some(v => v) ? 'bg-rose-600 text-white border-rose-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}
+            `}
+          >
             <Filter size={18} /> تصفية النتائج
+            {Object.values(filters).filter(v => v).length > 0 && (
+              <span className="bg-white text-rose-600 w-5 h-5 rounded-full flex items-center justify-center text-xs font-black mr-2">
+                {Object.values(filters).filter(v => v).length}
+              </span>
+            )}
           </button>
         </div>
+
+        {/* Filter Section Dropdown */}
+        {showFilters && (
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 mb-10 animate-in fade-in zoom-in-95 duration-200 flex flex-col md:flex-row gap-6">
+            <div className="flex-1 text-right">
+              <label className="block text-slate-700 font-bold mb-2">نوع الفستان</label>
+              <select 
+                value={filters.type}
+                onChange={(e) => setFilters({...filters, type: e.target.value})}
+                className="w-full bg-slate-100 rounded-xl py-3 px-4 outline-none border-2 border-transparent focus:bg-white focus:border-rose-500 transition-all font-semibold"
+              >
+                <option value="">الكل</option>
+                <option value="ملكي">ملكي</option>
+                <option value="ناعم">ناعم</option>
+                <option value="منفوش">منفوش</option>
+                <option value="حورية البحر">حورية البحر</option>
+                <option value="كلاسيكي">كلاسيكي</option>
+                <option value="تراثي">تراثي</option>
+              </select>
+            </div>
+            
+            <div className="flex-1 text-right">
+              <label className="block text-slate-700 font-bold mb-2">المقاس</label>
+              <select 
+                value={filters.size}
+                onChange={(e) => setFilters({...filters, size: e.target.value})}
+                className="w-full bg-slate-100 rounded-xl py-3 px-4 outline-none border-2 border-transparent focus:bg-white focus:border-rose-500 transition-all font-semibold"
+              >
+                <option value="">الكل</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+                <option value="مفصل">مفصل (Custom)</option>
+              </select>
+            </div>
+
+            <div className="flex-1 text-right">
+              <label className="block text-slate-700 font-bold mb-2">تاريخ التوفر</label>
+              <select 
+                value={filters.status}
+                onChange={(e) => setFilters({...filters, status: e.target.value})}
+                className="w-full bg-slate-100 rounded-xl py-3 px-4 outline-none border-2 border-transparent focus:bg-white focus:border-rose-500 transition-all font-semibold"
+              >
+                <option value="">الكل</option>
+                <option value="متاح">متاح</option>
+                <option value="محجوز">محجوز</option>
+              </select>
+            </div>
+
+            <div className="flex flex-col justify-end">
+               <button 
+                 onClick={() => setFilters({ type: '', size: '', status: '' })}
+                 className="text-slate-400 hover:text-rose-600 font-bold text-sm bg-slate-100 hover:bg-rose-50 px-6 py-3 rounded-xl transition-all"
+               >
+                 مسح الفلاتر
+               </button>
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <div className="flex justify-center items-center py-40">
@@ -141,14 +243,25 @@ const DressList = () => {
                   <p className="text-slate-500 text-sm leading-relaxed mb-8">
                     {dress.description}
                   </p>
-                  
-                  <div className="mt-auto pt-8 border-t border-slate-50 flex items-center justify-between">
-                    <div className="text-slate-400 text-xs font-bold uppercase tracking-tighter">
-                       {dress.size} :المقاس
+                  <div className="mt-auto pt-6 flex flex-col gap-3">
+                    <div className="flex justify-between items-center text-sm font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                       <span>نوع الفستان:</span>
+                       <span className="text-slate-900">{dress.type}</span>
                     </div>
+                    <div className="flex justify-between items-center text-sm font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                       <span>المقاس:</span>
+                       <span className="text-slate-900">{dress.size}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                       <span>تاريخ التوفر:</span>
+                       <span className={dress.status === 'متاح' ? 'text-green-600' : 'text-rose-600'}>{dress.status}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 pt-6 border-t border-slate-50 flex justify-end">
                     <Link 
                       to={`/dress/${dress.id}`}
-                      className="bg-slate-900 text-white px-8 py-3 rounded-2xl text-sm font-black hover:bg-rose-600 transition-all flex items-center gap-3 group/btn shadow-lg"
+                      className="w-full bg-slate-900 text-white py-3 rounded-2xl text-sm font-black hover:bg-rose-600 transition-all flex items-center justify-center gap-3 group/btn shadow-lg"
                     >
                       التفاصيل
                       <ArrowRight size={18} className="group-hover/btn:translate-x-[-5px] transition-transform" />

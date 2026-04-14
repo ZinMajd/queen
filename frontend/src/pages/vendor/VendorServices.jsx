@@ -37,7 +37,7 @@ const VendorServices = () => {
     if (user?.status === 'active') {
       fetchServices();
     }
-  }, []);
+  }, [user?.status]);
 
   const fetchServices = async () => {
     setLoading(true);

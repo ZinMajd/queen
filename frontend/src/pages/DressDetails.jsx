@@ -146,7 +146,7 @@ const DressDetails = () => {
                 className="w-full bg-slate-900 hover:bg-rose-600 text-white py-6 rounded-4xl text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 hover:-translate-y-1 active:scale-95 group"
               >
                 <Calendar size={24} className="group-hover:rotate-12 transition-transform" />
-                حجز موعد للقياس
+                حجز موعد
               </button>
               
               <div className="flex gap-4">

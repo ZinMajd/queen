@@ -4,15 +4,14 @@ import {
   Sparkles, 
   CalendarCheck, 
   TrendingUp, 
-  Users, 
   Clock, 
   CheckCircle2, 
   ArrowUpRight,
   TrendingDown,
   ShoppingBag
 } from 'lucide-react';
-import api from '../../api/api';
 
+// eslint-disable-next-line no-unused-vars
 const StatCard = ({ title, value, icon: Icon, color, trend, trendValue }) => (
   <div className="bg-white p-8 rounded-4xl shadow-sm border border-slate-100 hover:shadow-xl transition-all group overflow-hidden relative">
     <div className={`absolute top-0 right-0 w-32 h-32 ${color.replace('text-', 'bg-')}/5 rounded-full -translate-y-1/2 translate-x-1/2 transition-transform group-hover:scale-110`}></div>
@@ -44,7 +43,6 @@ const VendorDashboard = () => {
     pendingBookings: 0,
     completedBookings: 0
   });
-  const [loading, setLoading] = useState(true);
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -57,7 +55,6 @@ const VendorDashboard = () => {
         pendingBookings: 3,
         completedBookings: 8
       });
-      setLoading(false);
     }, 800);
   }, []);
 

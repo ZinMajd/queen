@@ -3,10 +3,28 @@
 
 :root {
   font-family: 'Cairo', sans-serif;
+  --brand-red: #dc6770;
+  --brand-gold: #e6969b;
+  --brand-gold-dark: #c0b4a9;
+  --brand-cream: #ffffff;
 }
 
 body {
-  background-color: var(--color-slate-50);
-  color: var(--color-slate-900);
+  background-color: var(--brand-cream);
+  color: #1a1a1a;
   direction: rtl;
 }
+
+/* Custom Utility Classes for Brand Colors */
+.text-brand-red { color: var(--brand-red); }
+.bg-brand-red { background-color: var(--brand-red); }
+.border-brand-red { border-color: var(--brand-red); }
+
+.text-brand-gold { color: var(--brand-gold); }
+.bg-brand-gold { background-color: var(--brand-gold); }
+.border-brand-gold { border-color: var(--brand-gold); }
+
+.text-brand-cream { color: var(--brand-cream); }
+.bg-brand-cream { background-color: var(--brand-cream); }
+.text-brand-gold-dark { color: var(--brand-gold-dark); }
+

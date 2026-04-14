@@ -41,58 +41,59 @@ class CategoryDressSeeder extends Seeder
             'image' => '/uploads/dresses/الزي الصبري.jpg' // Using as placeholder
         ]);
 
+
         // 2. فساتين الزفاف (White dresses)
-        $whiteDresses = [
-            'فساتين يوم الابيض.mp4',
-            'فساتين يوم الابيض (2).mp4',
-            'فساتين يوم الابيض (3).mp4',
-            'فساتين يوم الابيض (4).mp4',
-            'فساتين يوم الابيض (5).mp4',
+        $whiteWeddingData = [
+            ['file' => 'فساتين يوم الابيض.mp4', 'name' => 'عروس الملكة', 'type' => 'ملكي', 'size' => 'M', 'status' => 'متاح'],
+            ['file' => 'فساتين يوم الابيض (2).mp4', 'name' => 'نقاء الكريستال', 'type' => 'ناعم', 'size' => 'S', 'status' => 'متاح'],
+            ['file' => 'فساتين يوم الابيض (3).mp4', 'name' => 'سحر منفوش', 'type' => 'منفوش', 'size' => 'L', 'status' => 'محجوز'],
+            ['file' => 'فساتين يوم الابيض (4).mp4', 'name' => 'أمواج البحر', 'type' => 'حورية البحر', 'size' => 'M', 'status' => 'متاح'],
+            ['file' => 'فساتين يوم الابيض (5).mp4', 'name' => 'أصالة الزمن', 'type' => 'كلاسيكي', 'size' => 'مفصل', 'status' => 'متاح'],
         ];
 
-        foreach ($whiteDresses as $index => $file) {
+        foreach ($whiteWeddingData as $data) {
             Dress::create([
                 'category_id' => $catWedding->id,
-                'name' => 'فستان زفاف ملكي ' . ($index + 1),
+                'name' => $data['name'],
                 'description' => 'إطلالة بيضاء ساحرة مع أرقى الأقمشة والتصاميم العصرية لليلة العمر.',
-                'size' => 'M, L',
-                'type' => 'Premium',
-                'image' => '/uploads/dresses/' . $file,
-                'status' => 'متوفر',
+                'size' => $data['size'],
+                'type' => $data['type'],
+                'image' => '/uploads/dresses/' . $data['file'],
+                'status' => $data['status'],
             ]);
         }
 
         // 3. فساتين صنعاني (Sana'ani dresses)
         $sanaaniDresses = [
-            'صنعاني.jpg',
-            'تراث صنعاني.jpg',
-            'القميص الصنعاني.jpg',
-            'صنعاني (3).jpg',
-            'صنعاني (4).jpg',
-            'الزي الصبري.jpg',
+            ['file' => 'صنعاني.jpg', 'name' => 'صنعاني أصيل', 'size' => 'M', 'status' => 'متاح'],
+            ['file' => 'تراث صنعاني.jpg', 'name' => 'تراث العروس', 'size' => 'S', 'status' => 'متاح'],
+            ['file' => 'القميص الصنعاني.jpg', 'name' => 'القميص المطرز', 'size' => 'L', 'status' => 'محجوز'],
+            ['file' => 'صنعاني (3).jpg', 'name' => 'هدايا الجدة', 'size' => 'M', 'status' => 'متاح'],
+            ['file' => 'صنعاني (4).jpg', 'name' => 'ليلة العمر الصنعانية', 'size' => 'مفصل', 'status' => 'متاح'],
+            ['file' => 'الزي الصبري.jpg', 'name' => 'الزي الصبري', 'size' => 'M', 'status' => 'متاح'],
         ];
 
-        foreach ($sanaaniDresses as $index => $file) {
+        foreach ($sanaaniDresses as $data) {
             Dress::create([
                 'category_id' => $catSanaani->id,
-                'name' => 'تراث صنعاني أصيل ' . ($index + 1),
-                'description' => 'أجمل الأزياء التراثية الصنعانية المشغولة يدوياً بدقة عالية.',
-                'size' => 'S, M, L',
-                'type' => 'Traditional',
-                'image' => '/uploads/dresses/' . $file,
-                'status' => 'متوفر',
+                'name' => $data['name'],
+                'description' => 'أجمل الأزياء التراثية المشغولة يدوياً بدقة عالية تعكس جمال الماضي.',
+                'size' => $data['size'],
+                'type' => 'تراثي',
+                'image' => '/uploads/dresses/' . $data['file'],
+                'status' => $data['status'],
             ]);
         }
 
         // 4. فساتين حناء
         Dress::create([
             'category_id' => $catHenna->id,
-            'name' => 'فستان ليلة الحناء',
+            'name' => 'بهجة الحناء',
             'description' => 'تصميم تراثي بلمسة عصرية يناسب فرحة ليلة الحناء.',
-            'size' => 'M, L',
-            'type' => 'Henna Night',
+            'size' => 'L',
+            'type' => 'تراثي',
             'image' => '/uploads/dresses/فساتين يوم الحنى.mp4',
-            'status' => 'متوفر',
+            'status' => 'متاح',
         ]);
     }
 }
