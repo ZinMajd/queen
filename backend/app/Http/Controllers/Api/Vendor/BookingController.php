@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\BookingStatusChanged;
 
 class BookingController extends Controller
 {
@@ -47,6 +48,11 @@ class BookingController extends Controller
 
         $booking->status = $request->status;
         $booking->save();
+
+        // Trigger Notification to the Customer
+        if ($booking->user) {
+            $booking->user->notify(new BookingStatusChanged($booking, $request->status));
+        }
 
         // Refresh to get full user data if confirmed
         $booking->load(['user', 'service']);

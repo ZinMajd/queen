@@ -7,7 +7,11 @@ import {
   TrendingUp, 
   Clock,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Sparkles,
+  BarChart3,
+  PieChart as PieChartIcon,
+  Activity
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
@@ -52,17 +56,46 @@ const Dashboard = () => {
     );
   };
 
+  const ProgressBar = ({ label, value, max, color }) => (
+    <div className="space-y-2">
+      <div className="flex justify-between text-sm font-bold">
+        <span className="text-slate-600 truncate max-w-[150px]">{label}</span>
+        <span className="text-slate-900">{value} طلب</span>
+      </div>
+      <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+        <div 
+          className={`h-full ${color} rounded-full transition-all duration-1000 ease-out`} 
+          style={{ width: `${(value / max) * 100}%` }}
+        ></div>
+      </div>
+    </div>
+  );
+
   if (loading) return (
     <div className="flex justify-center items-center h-[60vh]">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-rose-600"></div>
     </div>
   );
 
+  const maxServiceCount = Math.max(...(data?.top_services?.map(s => s.count) || [1]));
+  const maxDressCount = Math.max(...(data?.top_dresses?.map(d => d.count) || [1]));
+
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div>
-        <h1 className="text-4xl font-black text-slate-900 mb-2 mt-4">نظرة عامة على النظام</h1>
-        <p className="text-slate-500 font-medium">أهلاً بك مجدداً، إليك ملخص العمليات اليوم</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div>
+          <h1 className="text-4xl font-black text-slate-900 mb-2 mt-4">تقارير المنصة التحليلية</h1>
+          <p className="text-slate-500 font-medium text-lg">أهلاً بكِ في مركز التحكم، إليكِ تحليل شامل لنشاط الملكة</p>
+        </div>
+        <div className="bg-white px-8 py-4 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div className="text-right">
+                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">نمو المستخدمين (30 يوم)</p>
+                <div className="flex items-center gap-2">
+                    <TrendingUp size={20} className="text-green-500" />
+                    <span className="text-2xl font-black text-slate-900">+{data?.stats.new_users_30d}</span>
+                </div>
+            </div>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -82,62 +115,119 @@ const Dashboard = () => {
           trend={8}
         />
         <StatCard 
-          title="الأقسام المفعلة" 
-          value={data?.stats.total_categories} 
-          icon={Tags} 
-          color="bg-amber-600" 
-        />
-        <StatCard 
           title="المستخدمين" 
           value={data?.stats.total_users} 
           icon={Users} 
           color="bg-indigo-600" 
           trend={5}
         />
+        <StatCard 
+          title="الحجوزات المعلقة" 
+          value={data?.stats.pending_bookings} 
+          icon={Clock} 
+          color="bg-amber-600" 
+        />
+      </div>
+
+      {/* Analytics Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+         {/* Top Services Report */}
+         <div className="bg-white p-10 rounded-5xl shadow-sm border border-slate-100">
+            <div className="flex items-center gap-4 mb-10">
+                <div className="bg-indigo-100 p-4 rounded-3xl text-indigo-600">
+                    <BarChart3 size={28} />
+                </div>
+                <div>
+                     <h2 className="text-2xl font-black text-slate-900">أكثر الخدمات طلباً</h2>
+                     <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">بناءً على إجمالي الحجوزات</p>
+                </div>
+            </div>
+            <div className="space-y-8">
+                {data?.top_services?.length > 0 ? data.top_services.map(item => (
+                    <ProgressBar 
+                        key={item.service_id}
+                        label={item.service?.name}
+                        value={item.count}
+                        max={maxServiceCount}
+                        color="bg-indigo-600"
+                    />
+                )) : (
+                    <p className="text-center py-10 text-slate-400 italic">لا توجد بيانات كافية حالياً</p>
+                )}
+            </div>
+         </div>
+
+         {/* Top Dresses Report */}
+         <div className="bg-white p-10 rounded-5xl shadow-sm border border-slate-100">
+            <div className="flex items-center gap-4 mb-10">
+                <div className="bg-rose-100 p-4 rounded-3xl text-rose-600">
+                    <Sparkles size={28} />
+                </div>
+                <div>
+                     <h2 className="text-2xl font-black text-slate-900">الفساتين الأكثر تميزاً</h2>
+                     <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">أعلى معدلات حجز في المتجر</p>
+                </div>
+            </div>
+            <div className="space-y-8">
+                {data?.top_dresses?.length > 0 ? data.top_dresses.map(item => (
+                    <ProgressBar 
+                        key={item.dress_id}
+                        label={item.dress?.name}
+                        value={item.count}
+                        max={maxDressCount}
+                        color="bg-rose-600"
+                    />
+                )) : (
+                    <p className="text-center py-10 text-slate-400 italic">لا توجد بيانات كافية حالياً</p>
+                )}
+            </div>
+         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Recent Bookings Table */}
-        <div className="lg:col-span-2 bg-white rounded-5xl p-10 shadow-sm border border-slate-100">
+        <div className="lg:col-span-2 bg-white rounded-5xl p-10 shadow-sm border border-slate-100 overflow-hidden">
           <div className="flex justify-between items-center mb-10">
             <div className="flex items-center gap-4">
-                <div className="bg-rose-100 p-3 rounded-2xl text-rose-600">
+                <div className="bg-slate-100 p-3 rounded-2xl text-slate-600">
                     <Clock size={24} />
                 </div>
                 <h2 className="text-2xl font-black text-slate-900">أحدث الحجوزات</h2>
             </div>
-            <button onClick={() => navigate('/admin/bookings')} className="text-rose-600 font-bold hover:text-rose-700 transition-colors">عرض الكل</button>
+            <button onClick={() => navigate('/admin/bookings')} className="text-rose-600 font-bold hover:text-rose-700 transition-colors bg-rose-50 px-4 py-2 rounded-xl">عرض الكل</button>
           </div>
           
           <div className="overflow-x-auto">
             <table className="w-full text-right">
               <thead>
-                <tr className="text-slate-400 font-bold border-b border-slate-50">
+                <tr className="text-slate-400 font-bold border-b border-slate-50 text-xs uppercase tracking-widest">
                   <th className="pb-6">العميل</th>
-                  <th className="pb-6">الفستان/الخدمة</th>
-                  <th className="pb-6">التاريخ</th>
+                  <th className="pb-6">النوع</th>
+                  <th className="pb-6">البيان</th>
                   <th className="pb-6">الحالة</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {data?.recent_bookings.map((booking) => (
-                  <tr key={booking.id} className="group hover:bg-slate-50 transition-colors">
+                  <tr key={booking.id} className="group hover:bg-slate-50/50 transition-colors">
                     <td className="py-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-black text-slate-500">
+                            <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center font-black text-white text-xs">
                                 {booking.user?.name.charAt(0)}
                             </div>
                             <span className="font-bold text-slate-900">{booking.user?.name}</span>
                         </div>
                     </td>
-                    <td className="py-6 font-medium text-slate-600">
+                    <td className="py-6">
+                        <span className={`text-[10px] font-black uppercase px-3 py-1 rounded-lg ${booking.dress_id ? 'bg-amber-100 text-amber-600' : 'bg-indigo-100 text-indigo-600'}`}>
+                            {booking.dress_id ? 'فستان' : 'خدمة'}
+                        </span>
+                    </td>
+                    <td className="py-6 font-bold text-slate-600 text-sm">
                         {booking.dress?.name || booking.service?.name || '---'}
                     </td>
-                    <td className="py-6 text-slate-500 font-medium">
-                        {new Date(booking.booking_date).toLocaleDateString('ar-YE')}
-                    </td>
                     <td className="py-6">
-                      <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-tight ${
+                      <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tight ${
                         booking.status === 'pending' ? 'bg-amber-100 text-amber-700' :
                         booking.status === 'confirmed' ? 'bg-green-100 text-green-700' :
                         'bg-slate-100 text-slate-700'
@@ -153,43 +243,38 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions / Platform Info */}
-        <div className="bg-slate-900 rounded-5xl p-10 text-white shadow-2xl relative overflow-hidden">
+        {/* Status Distribution Visual */}
+        <div className="bg-slate-900 rounded-5xl p-10 text-white shadow-2xl relative overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 w-64 h-64 bg-rose-600 rounded-full blur-[120px] opacity-20 -translate-y-1/2 translate-x-1/2"></div>
             
             <h2 className="text-2xl font-black mb-10 relative z-10 flex items-center gap-3">
-                <TrendingUp className="text-rose-500" />
-                نشاط المنصة
+                <PieChartIcon className="text-rose-500" />
+                توزيع الحالات
             </h2>
             
-            <div className="space-y-10 relative z-10">
-                <div className="flex justify-between items-center group cursor-pointer">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center group-hover:bg-rose-600 transition-all">
-                            <ShoppingBag size={20} />
+            <div className="space-y-6 relative z-10 grow">
+                {data?.status_distribution?.map(item => (
+                    <div key={item.status} className="bg-white/5 p-4 rounded-2xl border border-white/5 flex justify-between items-center group hover:bg-white/10 transition-all">
+                        <div className="flex items-center gap-3">
+                            <div className={`w-2 h-2 rounded-full ${
+                                item.status === 'pending' ? 'bg-amber-500' :
+                                item.status === 'confirmed' ? 'bg-green-500' : 'bg-slate-400'
+                            }`}></div>
+                            <span className="font-bold text-slate-300 capitalize">{item.status}</span>
                         </div>
-                        <div>
-                            <p className="font-bold">الحجوزات المعلقة</p>
-                            <p className="text-xs text-slate-400">تحتاج إلى تأكيد</p>
-                        </div>
+                        <span className="font-black text-xl">{item.count}</span>
                     </div>
-                    <span className="text-2xl font-black text-rose-500">{data?.stats.pending_bookings}</span>
-                </div>
+                ))}
+            </div>
 
-                <div className="p-8 bg-white/5 rounded-4xl border border-white/10 mt-12">
-                    <h4 className="font-bold mb-4">نصيحة إدارية</h4>
-                    <p className="text-sm text-slate-400 leading-relaxed">
-                        تأكدي من متابعة الحجوزات المعلقة خلال اليوم لضمان أفضل تجربة للعملاء. تحديث حالة الفساتين غير المتوفرة يقلل من تضارب المواعيد.
-                    </p>
+            <div className="mt-10 p-8 bg-rose-600/10 rounded-4xl border border-rose-500/20 relative z-10">
+                <div className="flex items-center gap-3 mb-3 text-rose-500">
+                    <Activity size={20} />
+                    <h4 className="font-bold">ملخص النشاط</h4>
                 </div>
-
-                <button 
-                  onClick={() => navigate('/admin/bookings')}
-                  className="w-full bg-rose-600 hover:bg-rose-700 py-5 rounded-2xl font-black transition-all shadow-xl shadow-rose-900/50 flex items-center justify-center gap-3 group"
-                >
-                    مراجعة كافة الحجوزات
-                    <ArrowUpRight size={20} className="group-hover:translate-x-[-4px] group-hover:translate-y-[-4px] transition-transform" />
-                </button>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                    يتم تحديث هذه البيانات لحظياً. يمكنكِ تتبع معدلات التحويل بين الطلبات المعلقة والمؤكدة لتحسين أداء المنصة.
+                </p>
             </div>
         </div>
       </div>

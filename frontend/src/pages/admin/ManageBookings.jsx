@@ -199,7 +199,7 @@ const ManageBookings = () => {
               <div className="mt-8 pt-8 border-t border-slate-50 flex items-center gap-6">
                 <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">تواصل سريع:</p>
                 <div className="flex gap-3">
-                    <a href={`https://wa.me/${booking.user?.phone}`} target="_blank" className="flex items-center gap-2 bg-green-50 text-green-600 px-4 py-2 rounded-xl text-xs font-black hover:bg-green-600 hover:text-white transition-all">
+                    <a href={`https://api.whatsapp.com/send?phone=${booking.user?.phone}`} target="_blank" className="flex items-center gap-2 bg-green-50 text-green-600 px-4 py-2 rounded-xl text-xs font-black hover:bg-green-600 hover:text-white transition-all">
                         <MessageSquare size={14} /> واتساب
                     </a>
                     <a href={`tel:${booking.user?.phone}`} className="flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-xs font-black hover:bg-blue-600 hover:text-white transition-all">

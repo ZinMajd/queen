@@ -17,6 +17,7 @@ import {
   Truck
 } from 'lucide-react';
 import api from '../api/api';
+import WhatsAppPopup from '../components/WhatsAppPopup';
 
 const StatusBadge = ({ status }) => {
   const statusConfig = {
@@ -51,6 +52,7 @@ const StatusBadge = ({ status }) => {
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [whatsappOpen, setWhatsappOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -78,6 +80,7 @@ const MyBookings = () => {
   }, [navigate]);
 
   return (
+    <>
     <div className="min-h-screen bg-slate-50 pb-20">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-xl border-b border-slate-100 sticky top-0 z-50">
@@ -194,13 +197,23 @@ const MyBookings = () => {
             <h3 className="text-2xl font-black mb-3">هل لديكِ استفسار عن حجزكِ؟</h3>
             <p className="text-slate-400 font-medium">نحن هنا لخدمتكِ على مدار الساعة للإجابة على جميع تساؤلاتكِ.</p>
           </div>
-          <button className="relative z-10 bg-rose-600 hover:bg-rose-700 text-white px-8 py-4 rounded-xl font-black transition-all flex items-center gap-3 shadow-xl active:scale-95">
+          <button 
+            onClick={() => setWhatsappOpen(true)}
+            className="relative z-10 bg-rose-600 hover:bg-rose-700 text-white px-8 py-4 rounded-xl font-black transition-all flex items-center gap-3 shadow-xl active:scale-95"
+          >
             تحدثي مع خدمة العملاء
             <MessageSquare size={20} />
           </button>
         </div>
       </div>
     </div>
+
+    <WhatsAppPopup
+      isOpen={whatsappOpen}
+      onClose={() => setWhatsappOpen(false)}
+      message="دعم فني بخصوص حجوزاتي"
+    />
+    </>
   );
 };
 

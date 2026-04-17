@@ -12,8 +12,10 @@ import {
   Search,
   User,
   Clock,
-  MessageSquare
+  MessageSquare,
+  Store
 } from 'lucide-react';
+import NotificationBell from './NotificationBell';
 
 const VendorLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -149,10 +151,7 @@ const VendorLayout = () => {
             </div>
 
             <div className="flex items-center gap-6">
-              <button className="relative p-3 bg-slate-100 text-slate-600 rounded-2xl hover:bg-rose-50 hover:text-rose-600 transition-all">
-                <Bell size={22} />
-                <span className="absolute top-2 right-2 w-3 h-3 bg-rose-600 rounded-full border-2 border-white"></span>
-              </button>
+              <NotificationBell />
               
               <div className="flex items-center gap-4 border-r border-slate-200 pr-6">
                 <div className="text-left hidden sm:block">

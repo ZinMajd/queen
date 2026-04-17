@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Notifications\VendorStatusChanged;
 
 class UserController extends Controller
 {
@@ -13,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::latest()->get();
+        $users = User::latest()->paginate(20);
         return response()->json($users);
     }
 
@@ -29,6 +30,11 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->status = $request->status;
         $user->save();
+
+        // Trigger Notification to the Vendor/User
+        if ($user->role === 'مزود خدمة') {
+            $user->notify(new VendorStatusChanged($request->status));
+        }
 
         return response()->json([
             'message' => 'تم تحديث حالة المستخدم بنجاح.',

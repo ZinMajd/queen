@@ -20,7 +20,8 @@ class DressController extends Controller
             $searchTerm = '%' . $request->search . '%';
             $query->where(function($q) use ($searchTerm) {
                 $q->where('name', 'like', $searchTerm)
-                  ->orWhere('description', 'like', $searchTerm);
+                  ->orWhere('description', 'like', $searchTerm)
+                  ->orWhere('type', 'like', $searchTerm);
             });
         }
 
@@ -36,12 +37,20 @@ class DressController extends Controller
             $query->where('status', $request->status);
         }
 
-        return response()->json($query->with('category')->get());
+        if ($request->has('min_rating')) {
+            $query->whereHas('ratings', function($q) use ($request) {
+                $q->selectRaw('avg(rating)')->havingRaw('avg(rating) >= ?', [$request->min_rating]);
+            });
+        }
+
+        $query->withCount('favorites');
+
+        return response()->json($query->with('category')->paginate(12));
     }
 
     public function show($id)
     {
-        return response()->json(Dress::with('category')->findOrFail($id));
+        return response()->json(Dress::with('category')->withCount('favorites')->findOrFail($id));
     }
 
     /**

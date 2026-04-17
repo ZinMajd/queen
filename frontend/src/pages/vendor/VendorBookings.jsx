@@ -174,7 +174,7 @@ const VendorBookings = () => {
                         {booking.status === 'confirmed' && (
                           <div className="flex gap-3 animate-in slide-in-from-bottom duration-500">
                              <a 
-                               href={`https://wa.me/${booking.user?.phone}`} 
+                               href={`https://api.whatsapp.com/send?phone=${booking.user?.phone}`} 
                                target="_blank" 
                                rel="noreferrer"
                                className="flex items-center gap-2 bg-green-500 text-white px-6 py-4 rounded-2xl font-black hover:bg-green-600 transition-all shadow-lg shadow-green-200"

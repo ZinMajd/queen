@@ -17,6 +17,7 @@ import {
 import { getDress } from '../api/api';
 import BookingModal from '../components/BookingModal';
 import MediaRenderer from '../components/MediaRenderer';
+import WhatsAppPopup from '../components/WhatsAppPopup';
 
 const DressDetails = () => {
   const { id } = useParams();
@@ -24,6 +25,8 @@ const DressDetails = () => {
   const [dress, setDress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [whatsappOpen, setWhatsappOpen] = useState(false);
+  const [whatsappMsg, setWhatsappMsg] = useState('');
 
   useEffect(() => {
     const fetchDress = async () => {
@@ -150,10 +153,16 @@ const DressDetails = () => {
               </button>
               
               <div className="flex gap-4">
-                <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-4xl font-bold transition-all flex items-center justify-center gap-3">
+                <button 
+                  onClick={() => { setWhatsappMsg(`استفسار عن فستان: ${dress.name}`); setWhatsappOpen(true); }}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-4xl font-bold transition-all flex items-center justify-center gap-3 active:scale-95"
+                >
                   <MessageCircle size={20} /> استفسار واتساب
                 </button>
-                <button className="flex-1 bg-white border-2 border-slate-900 text-slate-900 py-5 rounded-4xl font-bold hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-3">
+                <button 
+                  onClick={() => window.location.href = 'tel:+967777512939'}
+                  className="flex-1 bg-white border-2 border-slate-900 text-slate-900 py-5 rounded-4xl font-bold hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-3 active:scale-95"
+                >
                   <Phone size={20} /> اتصال هاتفي
                 </button>
               </div>
@@ -165,6 +174,12 @@ const DressDetails = () => {
                 onClose={() => setIsModalOpen(false)} 
               />
             )}
+
+            <WhatsAppPopup
+              isOpen={whatsappOpen}
+              onClose={() => setWhatsappOpen(false)}
+              message={whatsappMsg}
+            />
 
             {/* Extra Info */}
             <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-slate-100 pt-12">

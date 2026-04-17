@@ -16,6 +16,21 @@ class Dress extends Model
         'status'
     ];
 
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
+
+    public function ratings()
+    {
+        return $this->morphMany(Rating::class, 'ratable');
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->ratings()->avg('rating') ?: 0;
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

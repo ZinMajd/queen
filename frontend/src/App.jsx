@@ -8,6 +8,8 @@ import Vendors from './pages/Vendors';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import MyBookings from './pages/MyBookings';
+import Favorites from './pages/Favorites';
+import Profile from './pages/Profile';
 
 // Admin Pages
 import AdminLayout from './components/AdminLayout';
@@ -16,6 +18,7 @@ import ManageDresses from './pages/admin/ManageDresses';
 import ManageCategories from './pages/admin/ManageCategories';
 import ManageBookings from './pages/admin/ManageBookings';
 import ManageUsers from './pages/admin/ManageUsers';
+import ManageSettings from './pages/admin/ManageSettings';
 
 // Vendor Pages
 import VendorLayout from './components/VendorLayout';
@@ -37,6 +40,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/bookings" element={<MyBookings />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/profile" element={<Profile />} />
 
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
@@ -45,6 +50,7 @@ function App() {
             <Route path="categories" element={<ManageCategories />} />
             <Route path="bookings" element={<ManageBookings />} />
             <Route path="users" element={<ManageUsers />} />
+            <Route path="settings" element={<ManageSettings />} />
           </Route>
 
           {/* Vendor Routes */}
