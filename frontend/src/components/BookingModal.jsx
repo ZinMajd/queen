@@ -11,7 +11,9 @@ import {
   ChevronLeft,
   AlertCircle,
   Loader2,
-  Lock
+  Lock,
+  MessageCircle,
+  Phone
 } from 'lucide-react';
 import api from '../api/api';
 
@@ -269,9 +271,25 @@ const BookingModal = ({ isOpen, onClose, dress, service }) => {
               <CheckCircle2 className="text-green-500" size={48} />
             </div>
             <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">تم طلب الحجز بنجاح!</h2>
-            <p className="text-slate-500 leading-relaxed text-lg">
+            <p className="text-slate-500 leading-relaxed text-lg mb-8">
               سنتواصل معكِ هاتفياً خلال 24 ساعة لتأكيد الموعد وتفاصيل التوصيل.
             </p>
+            <div className="flex flex-col gap-3">
+              <a
+                href={`whatsapp://send?phone=967777512939&text=تم حجز فستان ${dress?.name || ''} وأريد تأكيد الطلب`}
+                className="flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#1ebe5e] text-white py-4 rounded-2xl font-black transition-all shadow-lg active:scale-95"
+              >
+                <MessageCircle size={22} />
+                تأكيد الحجز عبر واتساب
+              </a>
+              <a
+                href="tel:+967777512939"
+                className="flex items-center justify-center gap-3 bg-slate-100 hover:bg-slate-200 text-slate-800 py-4 rounded-2xl font-black transition-all active:scale-95"
+              >
+                <Phone size={20} />
+                اتصال هاتفي مباشر
+              </a>
+            </div>
           </div>
         ) : (
           <>
@@ -323,7 +341,7 @@ const BookingModal = ({ isOpen, onClose, dress, service }) => {
                   <button 
                     type="button"
                     onClick={prevStep}
-                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-2xl text-sm font-black transition-all"
+                    className="w-1/3 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-2xl text-sm font-black transition-all"
                   >
                     السابق
                   </button>
@@ -331,7 +349,7 @@ const BookingModal = ({ isOpen, onClose, dress, service }) => {
                 <button 
                   type="submit"
                   disabled={loading}
-                  className="flex-[2] bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-2xl text-sm font-black shadow-xl shadow-rose-200 transition-all flex items-center justify-center gap-2 hover:-translate-y-1 active:scale-95 disabled:opacity-50"
+                  className="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-2xl text-sm font-black shadow-xl shadow-rose-200 transition-all flex items-center justify-center gap-2 hover:-translate-y-1 active:scale-95 disabled:opacity-50"
                 >
                   {loading ? (
                     <Loader2 className="animate-spin" size={24} />
