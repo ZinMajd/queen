@@ -192,20 +192,7 @@ const Home = () => {
                 <span>واتساب الملكة</span>
                 <MessageSquare size={24} />
               </button>
-              <a 
-                href="tel:+967777512939"
-                onClick={(e) => {
-                  if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                    e.preventDefault();
-                    navigator.clipboard.writeText('+967777512939');
-                    alert('أنت تتصفح من الكمبيوتر، تم نسخ رقم الهاتف: +967 777 512 939');
-                  }
-                }}
-                className="w-full flex items-center justify-between gap-4 bg-white/40 text-black px-8 py-5 rounded-3xl hover:bg-white transition-all font-black shadow-xl"
-              >
-                <span>اتصال هاتفي</span>
-                <Phone size={24} />
-              </a>
+              
             </div>
           </div>
         </div>

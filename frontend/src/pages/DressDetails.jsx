@@ -159,12 +159,7 @@ const DressDetails = () => {
                 >
                   <MessageCircle size={20} /> استفسار واتساب
                 </button>
-                <button 
-                  onClick={() => window.location.href = 'tel:+967777512939'}
-                  className="flex-1 bg-white border-2 border-slate-900 text-slate-900 py-5 rounded-4xl font-bold hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center gap-3 active:scale-95"
-                >
-                  <Phone size={20} /> اتصال هاتفي
-                </button>
+
               </div>
             </div>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, Award, ShieldCheck, MapPin, Loader2, Search, X, Filter } from 'lucide-react';
 import { getVendors } from '../api/api';
@@ -10,7 +10,7 @@ const Vendors = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const navigate = useNavigate();
 
-  const fetchVendors = async () => {
+  const fetchVendors = useCallback(async () => {
     setLoading(true);
     try {
       const params = {
@@ -21,52 +21,17 @@ const Vendors = () => {
       setVendors(response.data);
     } catch (error) {
       console.error('Error fetching vendors:', error);
-      // Fallback for demo if API fails or table is empty
-      if (vendors.length === 0) {
-          setVendors([
-            {
-              id: 1,
-              name: "صالون لمسات سحرية",
-              category: "تجميل ومكياج",
-              rating: 4.9,
-              reviews: 128,
-              location: "صنعاء - حدة",
-              image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-              featured: true
-            },
-            {
-              id: 2,
-              name: "ستوديو ذكرياتنا",
-              category: "تصوير احترافي",
-              rating: 4.8,
-              reviews: 95,
-              location: "عدن - خورمكسر",
-              image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-              featured: false
-            },
-            {
-              id: 3,
-              name: "رويال للافراح",
-              category: "منسق حفلات",
-              rating: 5.0,
-              reviews: 210,
-              location: "صنعاء - الحصبة",
-              image: "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-              featured: true
-            }
-          ]);
-      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeCategory, searchTerm]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
         fetchVendors();
     }, 500);
     return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm, activeCategory]);
+  }, [fetchVendors]);
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20" dir="rtl">

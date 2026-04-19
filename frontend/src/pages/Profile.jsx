@@ -37,11 +37,11 @@ const Profile = () => {
     }
     const parsedUser = JSON.parse(storedUser);
     setUser(parsedUser);
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       name: parsedUser.name || '',
       phone: parsedUser.phone || ''
-    });
+    }));
     if (parsedUser.avatar) {
       setAvatarPreview(parsedUser.avatar);
     }

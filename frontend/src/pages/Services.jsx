@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Loader2, 
@@ -86,7 +86,7 @@ const Services = () => {
   const [pagination, setPagination] = useState({ current_page: 1, last_page: 1 });
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const fetchServices = async (page = 1) => {
+  const fetchServices = useCallback(async (page = 1) => {
     if (page === 1) setLoading(true);
     else setLoadingMore(true);
     
@@ -115,7 +115,7 @@ const Services = () => {
       setLoading(false);
       setLoadingMore(false);
     }
-  };
+  }, [searchTerm, filters]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -123,7 +123,7 @@ const Services = () => {
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm, filters]);
+  }, [fetchServices]);
 
   const handleLoadMore = () => {
     if (pagination.current_page < pagination.last_page) {
@@ -355,19 +355,6 @@ const Services = () => {
               >
                 <MessageSquare size={24} /> واتساب مباشر
               </button>
-              <a 
-                href="tel:+967777512939"
-                onClick={(e) => {
-                  if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                    e.preventDefault();
-                    navigator.clipboard.writeText('+967777512939');
-                    alert('أنت تتصفح من الكمبيوتر، تم نسخ رقم الهاتف: +967 777 512 939');
-                  }
-                }}
-                className="bg-rose-700 text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-rose-800 transition-all shadow-xl flex items-center justify-center gap-3 active:scale-95 inline-flex"
-              >
-                <Phone size={24} /> اتصلي بنا
-              </a>
             </div>
           </div>
         </div>
