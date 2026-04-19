@@ -98,8 +98,36 @@ Route::middleware(['auth:sanctum', 'vendor'])->prefix('vendor')->group(function 
 Route::get('/init-db', function() {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-        return "Database initialized successfully! " . \Illuminate\Support\Facades\Artisan::output();
+        return "Database migrated successfully! Use /api/seed-basic to add data.";
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
+// Basic seeding without Faker
+Route::get('/seed-basic', function() {
+    try {
+        $cat = \App\Models\Category::firstOrCreate(['name' => 'فساتين زفاف', 'slug' => 'wedding-dresses']);
+        
+        \App\Models\Dress::create([
+            'name' => 'فستان الملكة الفاخر',
+            'description' => 'فستان زفاف مطرز بالكريستال مع طرحة طويلة',
+            'price' => 1200,
+            'category_id' => $cat->id,
+            'image' => 'https://images.unsplash.com/photo-1594553503452-031f1c0a9808',
+            'status' => 'available'
+        ]);
+
+        \App\Models\Dress::create([
+            'name' => 'فستان كلاسيكي ناعم',
+            'description' => 'تصميم بسيط وأنيق للعروس العصرية',
+            'price' => 850,
+            'category_id' => $cat->id,
+            'image' => 'https://images.unsplash.com/photo-1546193430-c2d207739ed7',
+            'status' => 'available'
+        ]);
+
+        return "Sample dresses added successfully! Refresh your website now.";
     } catch (\Exception $e) {
         return "Error: " . $e->getMessage();
     }
