@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Loader2, 
   ArrowLeft, 
@@ -16,12 +16,11 @@ import {
   X,
   Star,
   ChevronRight,
-  User
+  User,
+  Heart
 } from 'lucide-react';
 import { getServices, toggleFavorite } from '../api/api';
-import { useNavigate } from 'react-router-dom';
 import MediaRenderer from '../components/MediaRenderer';
-import { Heart } from 'lucide-react';
 import WhatsAppPopup from '../components/WhatsAppPopup';
 
 const ServiceIcon = ({ type, size = 24, className = "" }) => {
