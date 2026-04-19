@@ -249,9 +249,9 @@ const Services = () => {
                   <MediaRenderer 
                     src={service.image} 
                     alt={service.name} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="absolute bottom-10 right-10 left-10 text-white">
                     <div className="flex justify-between items-end">
                         <div>
