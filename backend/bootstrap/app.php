@@ -19,4 +19,5 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })->create()
+    ->useStoragePath(env('APP_ENV') === 'production' ? '/tmp/storage' : null);
