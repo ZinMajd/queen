@@ -101,11 +101,11 @@ const Dashboard = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <StatCard 
-          title="إجمالي الفساتين" 
-          value={data?.stats.total_dresses} 
-          icon={ShoppingBag} 
-          color="bg-blue-600" 
-          trend={12}
+          title="إجمالي الأرباح" 
+          value={`${data?.stats.total_revenue || 0} ر.ي`} 
+          icon={TrendingUp} 
+          color="bg-green-600" 
+          trend={15}
         />
         <StatCard 
           title="إجمالي الحجوزات" 
@@ -122,11 +122,41 @@ const Dashboard = () => {
           trend={5}
         />
         <StatCard 
-          title="الحجوزات المعلقة" 
-          value={data?.stats.pending_bookings} 
-          icon={Clock} 
+          title="مزودي الخدمات" 
+          value={data?.stats.total_vendors} 
+          icon={Sparkles} 
           color="bg-amber-600" 
         />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+            <div className="p-4 bg-amber-100 text-amber-600 rounded-2xl">
+                <Clock size={24} />
+            </div>
+            <div>
+                <p className="text-xs text-slate-400 font-bold uppercase">حجوزات معلقة</p>
+                <p className="text-2xl font-black text-slate-900">{data?.stats.pending_bookings}</p>
+            </div>
+        </div>
+        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+            <div className="p-4 bg-blue-100 text-blue-600 rounded-2xl">
+                <ShoppingBag size={24} />
+            </div>
+            <div>
+                <p className="text-xs text-slate-400 font-bold uppercase">إجمالي الفساتين</p>
+                <p className="text-2xl font-black text-slate-900">{data?.stats.total_dresses}</p>
+            </div>
+        </div>
+        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+            <div className="p-4 bg-rose-100 text-rose-600 rounded-2xl">
+                <Users size={24} />
+            </div>
+            <div>
+                <p className="text-xs text-slate-400 font-bold uppercase">مزودين قيد المراجعة</p>
+                <p className="text-2xl font-black text-slate-900">{data?.stats.pending_vendors}</p>
+            </div>
+        </div>
       </div>
 
       {/* Analytics Section */}

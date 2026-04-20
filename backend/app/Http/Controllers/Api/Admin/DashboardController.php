@@ -25,18 +25,12 @@ class DashboardController extends Controller
             'total_categories' => Category::count(),
             'total_bookings' => Booking::count(),
             'total_users' => User::count(),
+            'total_vendors' => User::where('role', 'مزود')->count(),
+            'pending_vendors' => User::where('role', 'مزود')->where('status', 'pending')->count(),
             'pending_bookings' => Booking::where('status', 'pending')->count(),
+            'total_revenue' => Booking::where('status', 'paid')->sum('total_price'),
             'new_users_30d' => User::where('created_at', '>=', now()->subDays(30))->count(),
         ];
-
-        // Top Services (Most Booked)
-        $topServices = Booking::whereNotNull('service_id')
-            ->select('service_id', DB::raw('count(*) as count'))
-            ->groupBy('service_id')
-            ->orderBy('count', 'desc')
-            ->take(5)
-            ->with('service')
-            ->get();
 
         // Top Dresses (Most Booked)
         $topDresses = Booking::whereNotNull('dress_id')
@@ -54,10 +48,9 @@ class DashboardController extends Controller
 
         return response()->json([
             'stats' => $stats,
-            'top_services' => $topServices,
             'top_dresses' => $topDresses,
             'status_distribution' => $statusDistribution,
-            'recent_bookings' => Booking::with(['dress', 'service', 'user'])->latest()->take(10)->get()
+            'recent_bookings' => Booking::with(['dress', 'service', 'user'])->latest()->take(8)->get()
         ]);
     }
 }
