@@ -14,14 +14,13 @@ const MediaRenderer = ({ src, alt, className }) => {
   const isVideo = srcString.endsWith('.mp4') || srcString.endsWith('.webm');
   
   // Use the dynamic base URL from api.js
-  // We remove '/api' from the end of BASE_URL for asset paths
-  const backendBase = BASE_URL.replace(/\/api$/, '');
+  const backendBase = 'https://queen-bay.vercel.app';
   let fullSrc = src || '';
   
   if (src && !src.startsWith('http')) {
-    // Ensure leading slash and encode URI for Arabic characters
+    // Ensure leading slash
     const path = src.startsWith('/') ? src : `/${src}`;
-    fullSrc = `${backendBase}${encodeURI(path)}`;
+    fullSrc = `${backendBase}${path}`;
   }
 
   if (isVideo) {

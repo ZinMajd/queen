@@ -20,4 +20,5 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create()
-    ->useStoragePath(env('APP_ENV') === 'production' ? '/tmp/storage' : null);
+    ->useStoragePath(is_dir('/tmp') && env('APP_ENV') === 'production' ? '/tmp/storage' : null)
+    ->useBootstrapCachePath(is_dir('/tmp') && env('APP_ENV') === 'production' ? '/tmp/bootstrap/cache' : null);
