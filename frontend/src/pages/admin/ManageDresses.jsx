@@ -244,7 +244,7 @@ const ManageDresses = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-100 flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
-          <div className="relative bg-white w-full max-w-2xl rounded-5xl shadow-2xl overflow-hidden animate-in zoom-in slide-in-from-top-4 duration-300">
+          <div className="relative bg-white w-full max-w-lg rounded-5xl shadow-2xl overflow-hidden animate-in zoom-in slide-in-from-top-4 duration-300">
             <div className="bg-slate-900 p-8 text-white flex items-center justify-between">
               <h2 className="text-2xl font-black">{editingDress ? 'تعديل الفستان' : 'إضافة فستان جديد'}</h2>
               <button 
@@ -254,9 +254,9 @@ const ManageDresses = () => {
                 <X size={24} />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-10 space-y-8">
-              <div className="grid grid-cols-2 gap-8">
-                <div className="col-span-2">
+            <form onSubmit={handleSubmit} className="p-8 space-y-6">
+              <div className="grid grid-cols-1 gap-6">
+                <div>
                   <label className="block text-slate-700 font-bold mb-3">اسم الفستان</label>
                   <input 
                     type="text" 
@@ -290,7 +290,7 @@ const ManageDresses = () => {
                     className="w-full bg-slate-50 border-2 border-slate-100 focus:border-rose-500 focus:bg-white rounded-2xl py-4 px-6 outline-none transition-all font-bold"
                   />
                 </div>
-                <div className="col-span-2">
+                <div>
                   <label className="block text-slate-700 font-bold mb-3">الوصف</label>
                   <textarea 
                     rows="3"
@@ -300,7 +300,7 @@ const ManageDresses = () => {
                     className="w-full bg-slate-50 border-2 border-slate-100 focus:border-rose-500 focus:bg-white rounded-2xl py-4 px-6 outline-none transition-all font-bold resize-none"
                   ></textarea>
                 </div>
-                <div className="col-span-2">
+                <div>
                   <label className="block text-slate-700 font-bold mb-3">صورة الفستان</label>
                   <div className="relative group cursor-pointer">
                     <input 
