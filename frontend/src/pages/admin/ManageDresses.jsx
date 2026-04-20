@@ -101,7 +101,10 @@ const ManageDresses = () => {
       fetchData();
     } catch (err) {
       console.error('Submit error:', err);
-      alert('حدث خطأ أثناء حفظ البيانات');
+      const message = err.response?.data?.errors 
+        ? Object.values(err.response.data.errors).flat().join(' ')
+        : 'حدث خطأ أثناء حفظ البيانات';
+      alert(message);
     }
   };
 
@@ -278,6 +281,21 @@ const ManageDresses = () => {
                     {categories.map(cat => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>
                     ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-700 font-bold mb-3">نوع الفستان</label>
+                  <select 
+                    required
+                    value={formData.type}
+                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                    className="w-full bg-slate-50 border-2 border-slate-100 focus:border-rose-500 focus:bg-white rounded-2xl py-4 px-6 outline-none transition-all font-bold"
+                  >
+                    <option value="">اختر النوع</option>
+                    <option value="زفاف">فستان زفاف</option>
+                    <option value="خطوبة">فستان خطوبة</option>
+                    <option value="سهرة">فستان سهرة</option>
+                    <option value="حناء">فستان حناء</option>
                   </select>
                 </div>
                 <div>
