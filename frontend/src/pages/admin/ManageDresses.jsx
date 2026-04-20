@@ -36,18 +36,21 @@ const ManageDresses = () => {
   }, []);
 
   const fetchData = async () => {
-    setLoading(true);
     try {
-        const [dressesRes, categoriesRes] = await Promise.all([
+        setLoading(true);
+        const [dressesRes, categoriesRes] = await Promise.allSettled([
           api.getDresses(),
           api.getCategories()
         ]);
-        setDresses(dressesRes.data.data || []);
-        // Handle both simple array and paginated categories
-        setCategories(categoriesRes.data.data || categoriesRes.data || []);
+        
+        if (dressesRes.status === 'fulfilled') {
+            setDresses(dressesRes.value.data?.data || dressesRes.value.data || []);
+        }
+        if (categoriesRes.status === 'fulfilled') {
+            setCategories(categoriesRes.value.data?.data || categoriesRes.value.data || []);
+        }
     } catch (err) {
       console.error('Error fetching data:', err);
-      alert('فشل تحميل البيانات: ' + (err.response?.statusText || err.message));
     } finally {
       setLoading(false);
     }
