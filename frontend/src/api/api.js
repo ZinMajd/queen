@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const BASE_URL = (typeof window !== 'undefined' ? window.location.origin : '') + '/api';
+export const BASE_URL = 'https://queenn.vercel.app/api';
 const API_BASE_URL = BASE_URL;
 
 const api = axios.create({
