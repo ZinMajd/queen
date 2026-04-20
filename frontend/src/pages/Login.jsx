@@ -17,9 +17,18 @@ const Login = () => {
 
     try {
       const response = await loginApi({ email, password });
+      const user = response.data.user;
       localStorage.setItem('token', response.data.access_token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      navigate('/');
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      // Smart redirection based on role
+      if (user.role === 'إدارة') {
+        navigate('/admin');
+      } else if (user.role === 'مزود خدمة') {
+        navigate('/vendor');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       const errorMessage = err.response?.data?.errors 
         ? Object.values(err.response.data.errors).flat().join(' ')
