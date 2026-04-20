@@ -1,5 +1,6 @@
 {
     "version": 2,
+    "trailingSlash": false,
     "functions": {
         "public/index.php": {
             "runtime": "vercel-php@0.7.1"
@@ -9,6 +10,10 @@
         {
             "src": "/(css|js|images|fonts|uploads)/(.*)",
             "dest": "/public/$1/$2"
+        },
+        {
+            "src": "/api/(.*)",
+            "dest": "/public/index.php"
         },
         {
             "src": "/(.*)",
