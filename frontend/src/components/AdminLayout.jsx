@@ -13,6 +13,7 @@ import {
   Bell,
   Search,
   User,
+  UserCheck,
   Settings
 } from 'lucide-react';
 import NotificationBell from './NotificationBell';
@@ -45,6 +46,7 @@ const AdminLayout = () => {
     { title: 'إدارة الأقسام', icon: Tags, path: '/admin/categories' },
     { title: 'إدارة الحجوزات', icon: CalendarCheck, path: '/admin/bookings' },
     { title: 'المستخدمين', icon: Users, path: '/admin/users' },
+    { title: 'المزودين', icon: UserCheck, path: '/admin/vendors' },
     { title: 'الإعدادات', icon: Settings, path: '/admin/settings' },
   ];
 

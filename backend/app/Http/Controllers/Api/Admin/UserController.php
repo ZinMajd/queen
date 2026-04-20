@@ -19,6 +19,20 @@ class UserController extends Controller
     }
 
     /**
+     * Get only vendors for approval management.
+     */
+    public function getVendors(Request $request)
+    {
+        $query = User::where('role', 'مزود خدمة');
+        
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        return response()->json($query->latest()->get());
+    }
+
+    /**
      * Update user status (Approve/Reject Vendors).
      */
     public function updateStatus(Request $request, $id)

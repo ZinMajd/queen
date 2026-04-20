@@ -73,6 +73,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     
     // User Management
     Route::get('/users', [\App\Http\Controllers\Api\Admin\UserController::class, 'index']);
+    Route::get('/vendors', [\App\Http\Controllers\Api\Admin\UserController::class, 'getVendors']);
     Route::put('/users/{id}/status', [\App\Http\Controllers\Api\Admin\UserController::class, 'updateStatus']);
     Route::delete('/users/{id}', [\App\Http\Controllers\Api\Admin\UserController::class, 'destroy']);
 });

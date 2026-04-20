@@ -18,6 +18,7 @@ import ManageDresses from './pages/admin/ManageDresses';
 import ManageCategories from './pages/admin/ManageCategories';
 import ManageBookings from './pages/admin/ManageBookings';
 import ManageUsers from './pages/admin/ManageUsers';
+import ManageVendors from './pages/admin/ManageVendors';
 import ManageSettings from './pages/admin/ManageSettings';
 
 // Vendor Pages
@@ -50,6 +51,7 @@ function App() {
             <Route path="categories" element={<ManageCategories />} />
             <Route path="bookings" element={<ManageBookings />} />
             <Route path="users" element={<ManageUsers />} />
+            <Route path="vendors" element={<ManageVendors />} />
             <Route path="settings" element={<ManageSettings />} />
           </Route>
 

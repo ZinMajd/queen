@@ -63,6 +63,12 @@ export const updateSettings = (formData) => api.post('/admin/settings', formData
     headers: { 'Content-Type': 'multipart/form-data' }
 });
 
+// Admin User/Vendor Management
+export const adminGetUsers = () => api.get('/admin/users');
+export const adminGetVendors = (params) => api.get('/admin/vendors', { params });
+export const updateUserStatus = (id, status) => api.put(`/admin/users/${id}/status`, { status });
+export const deleteUser = (id) => api.delete(`/admin/users/${id}`);
+
 // Public Settings
 export const getSiteSettings = () => api.get('/settings');
 
