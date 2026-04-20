@@ -44,10 +44,12 @@ const ManageDresses = () => {
         ]);
         
         if (dressesRes.status === 'fulfilled') {
-            setDresses(dressesRes.value.data?.data || dressesRes.value.data || []);
+            const data = dressesRes.value.data?.data || dressesRes.value.data;
+            setDresses(Array.isArray(data) ? data : []);
         }
         if (categoriesRes.status === 'fulfilled') {
-            setCategories(categoriesRes.value.data?.data || categoriesRes.value.data || []);
+            const data = categoriesRes.value.data?.data || categoriesRes.value.data;
+            setCategories(Array.isArray(data) ? data : []);
         }
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -124,10 +126,10 @@ const ManageDresses = () => {
     }
   };
 
-  const filteredDresses = dresses.filter(d => 
-    d.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    d.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredDresses = Array.isArray(dresses) ? dresses.filter(d => 
+    d.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    d.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  ) : [];
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">

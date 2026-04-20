@@ -32,7 +32,7 @@ const ManageCategories = () => {
     setLoading(true);
     try {
       const response = await api.get('/admin/categories');
-      setCategories(response.data);
+      setCategories(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       console.error('Error fetching categories:', err);
     } finally {
@@ -98,9 +98,9 @@ const ManageCategories = () => {
     }
   };
 
-  const filteredCategories = categories.filter(c => 
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCategories = Array.isArray(categories) ? categories.filter(c => 
+    c.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  ) : [];
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
