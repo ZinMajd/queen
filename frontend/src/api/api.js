@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const BASE_URL = import.meta.env.VITE_API_URL || 'https://queen-bay.vercel.app/api';
+export const BASE_URL = import.meta.env.VITE_API_URL || 'https://queenn.vercel.app/api';
 const API_BASE_URL = BASE_URL.endsWith('/api') ? BASE_URL : `${BASE_URL}/api`;
 
 const api = axios.create({

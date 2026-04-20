@@ -47,6 +47,7 @@ const ManageDresses = () => {
         setCategories(categoriesRes.data.data || categoriesRes.data || []);
     } catch (err) {
       console.error('Error fetching data:', err);
+      alert('فشل تحميل البيانات: ' + (err.response?.statusText || err.message));
     } finally {
       setLoading(false);
     }
