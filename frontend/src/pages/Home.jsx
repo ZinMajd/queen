@@ -30,15 +30,6 @@ const Home = () => {
   const [whatsappOpen, setWhatsappOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Redirect admin users to dashboard
-  React.useEffect(() => {
-    if (user?.role === 'إدارة') {
-      navigate('/admin');
-    } else if (user?.role === 'مزود خدمة') {
-      navigate('/vendor');
-    }
-  }, [user, navigate]);
-
   const handleLogout = async () => {
     try {
       await logoutApi();
