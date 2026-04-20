@@ -9,63 +9,63 @@ use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\Admin\SettingController;
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('api/register', [AuthController::class, 'register']);
+Route::any('api/login', [AuthController::class, 'login']);
 
-Route::get('/settings', [SettingController::class, 'getPublicSettings']);
+Route::get('api/settings', [SettingController::class, 'getPublicSettings']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', [AuthController::class, 'user']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('api/user', [AuthController::class, 'user']);
+    Route::post('api/logout', [AuthController::class, 'logout']);
     
     // Booking Routes
-    Route::get('/bookings', [\App\Http\Controllers\Api\BookingController::class, 'index']);
-    Route::post('/bookings', [\App\Http\Controllers\Api\BookingController::class, 'store']);
-    Route::get('/bookings/{id}', [\App\Http\Controllers\Api\BookingController::class, 'show']);
+    Route::get('api/bookings', [\App\Http\Controllers\Api\BookingController::class, 'index']);
+    Route::post('api/bookings', [\App\Http\Controllers\Api\BookingController::class, 'store']);
+    Route::get('api/bookings/{id}', [\App\Http\Controllers\Api\BookingController::class, 'show']);
     
     // Notification Routes
-    Route::get('/notifications', [NotificationController::class, 'index']);
-    Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
-    Route::put('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
-    Route::delete('/notifications', [NotificationController::class, 'destroyAll']);
+    Route::get('api/notifications', [NotificationController::class, 'index']);
+    Route::put('api/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::put('api/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+    Route::delete('api/notifications', [NotificationController::class, 'destroyAll']);
 
     // Favorite Routes
-    Route::get('/favorites', [FavoriteController::class, 'index']);
-    Route::post('/favorites/toggle', [FavoriteController::class, 'toggle']);
+    Route::get('api/favorites', [FavoriteController::class, 'index']);
+    Route::post('api/favorites/toggle', [FavoriteController::class, 'toggle']);
 
     // Admin Settings Route
     Route::middleware('can:manage-system')->group(function() {
-         Route::get('/admin/settings', [SettingController::class, 'index']);
-         Route::post('/admin/settings', [SettingController::class, 'update']);
+         Route::get('api/admin/settings', [SettingController::class, 'index']);
+         Route::post('api/admin/settings', [SettingController::class, 'update']);
     });
 
     // Rating Route
-    Route::post('/ratings', [RatingController::class, 'store']);
+    Route::post('api/ratings', [RatingController::class, 'store']);
 
     // Profile Routes
-    Route::post('/profile/update', [\App\Http\Controllers\Api\ProfileController::class, 'update']);
+    Route::post('api/profile/update', [\App\Http\Controllers\Api\ProfileController::class, 'update']);
 });
 
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DressController;
 use App\Http\Controllers\Api\ServiceController;
 
-Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/categories/{id}', [CategoryController::class, 'show']);
-Route::get('/dresses', [DressController::class, 'index']);
-Route::get('/dresses/{id}', [DressController::class, 'show']);
-Route::get('/dresses/{id}/booked-dates', [DressController::class, 'getBookedDates']);
+Route::get('api/categories', [CategoryController::class, 'index']);
+Route::get('api/categories/{id}', [CategoryController::class, 'show']);
+Route::get('api/dresses', [DressController::class, 'index']);
+Route::get('api/dresses/{id}', [DressController::class, 'show']);
+Route::get('api/dresses/{id}/booked-dates', [DressController::class, 'getBookedDates']);
 
 // Service Routes
-Route::get('/services', [ServiceController::class, 'index']);
-Route::get('/services/{id}', [ServiceController::class, 'show']);
+Route::get('api/services', [ServiceController::class, 'index']);
+Route::get('api/services/{id}', [ServiceController::class, 'show']);
 
 // Vendor Routes
-Route::get('/vendors', [App\Http\Controllers\Api\VendorController::class, 'index']);
-Route::get('/vendors/{id}', [App\Http\Controllers\Api\VendorController::class, 'show']);
+Route::get('api/vendors', [App\Http\Controllers\Api\VendorController::class, 'index']);
+Route::get('api/vendors/{id}', [App\Http\Controllers\Api\VendorController::class, 'show']);
 
 // Admin Routes
-Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', 'admin'])->prefix('api/admin')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Api\Admin\DashboardController::class, 'index']);
     Route::apiResource('/dresses', \App\Http\Controllers\Api\Admin\DressController::class);
     Route::apiResource('/categories', \App\Http\Controllers\Api\Admin\CategoryController::class);
@@ -79,24 +79,24 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
 });
 
 // Vendor Routes
-Route::middleware(['auth:sanctum', 'vendor'])->prefix('vendor')->group(function () {
+Route::middleware(['auth:sanctum', 'vendor'])->prefix('api/vendor')->group(function () {
     Route::get('/dashboard', function() {
         return response()->json(['message' => 'Vendor Dashboard Data Placeholder']);
     });
 
     // Service Management for Vendors
-    Route::get('/services', [\App\Http\Controllers\Api\Vendor\ServiceController::class, 'index']);
-    Route::post('/services', [\App\Http\Controllers\Api\Vendor\ServiceController::class, 'store']);
-    Route::put('/services/{id}', [\App\Http\Controllers\Api\Vendor\ServiceController::class, 'update']);
-    Route::delete('/services/{id}', [\App\Http\Controllers\Api\Vendor\ServiceController::class, 'destroy']);
+    Route::get('api/services', [\App\Http\Controllers\Api\Vendor\ServiceController::class, 'index']);
+    Route::post('api/services', [\App\Http\Controllers\Api\Vendor\ServiceController::class, 'store']);
+    Route::put('api/services/{id}', [\App\Http\Controllers\Api\Vendor\ServiceController::class, 'update']);
+    Route::delete('api/services/{id}', [\App\Http\Controllers\Api\Vendor\ServiceController::class, 'destroy']);
 
     // Booking Management for Vendors
-    Route::get('/bookings', [\App\Http\Controllers\Api\Vendor\BookingController::class, 'index']);
-    Route::put('/bookings/{id}/status', [\App\Http\Controllers\Api\Vendor\BookingController::class, 'updateStatus']);
+    Route::get('api/bookings', [\App\Http\Controllers\Api\Vendor\BookingController::class, 'index']);
+    Route::put('api/bookings/{id}/status', [\App\Http\Controllers\Api\Vendor\BookingController::class, 'updateStatus']);
 });
 
 // Temporary route to initialize DB on Vercel
-Route::get('/init-db', function() {
+Route::get('api/init-db', function() {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         return "Database migrated successfully! Use /api/seed-basic to add data.";
@@ -106,7 +106,7 @@ Route::get('/init-db', function() {
 });
 
 // Basic seeding without Faker
-Route::get('/seed-basic', function() {
+Route::get('api/seed-basic', function() {
     try {
         $cat = \App\Models\Category::firstOrCreate(['name' => 'فساتين زفاف', 'slug' => 'wedding-dresses']);
         
