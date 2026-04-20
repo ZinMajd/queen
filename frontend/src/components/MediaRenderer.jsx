@@ -12,9 +12,15 @@ const MediaRenderer = ({ src, alt, className }) => {
   const srcString = String(src || '').toLowerCase();
   const isVideo = srcString.endsWith('.mp4') || srcString.endsWith('.webm');
   
-  // Use the backend URL for local assets
+  // Dynamic base URL for assets
   const backendBase = 'https://queen-bay.vercel.app';
-  const fullSrc = src.startsWith('http') ? src : `${backendBase}${src}`;
+  let fullSrc = src || '';
+  
+  if (src && !src.startsWith('http')) {
+    // Ensure leading slash
+    const path = src.startsWith('/') ? src : `/${src}`;
+    fullSrc = `${backendBase}${path}`;
+  }
 
   if (isVideo) {
     return (
