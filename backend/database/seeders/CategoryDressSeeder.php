@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Dress;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class CategoryDressSeeder extends Seeder
 {
@@ -15,10 +16,10 @@ class CategoryDressSeeder extends Seeder
     public function run(): void
     {
         // Clear existing data to avoid duplicates
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::disableForeignKeyConstraints();
         Dress::truncate();
         Category::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::enableForeignKeyConstraints();
 
         // 1. الأقسام
         $catWedding = Category::create([

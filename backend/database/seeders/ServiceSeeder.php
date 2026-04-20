@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Service;
 
+use Illuminate\Support\Facades\Schema;
+
 class ServiceSeeder extends Seeder
 {
     /**
@@ -13,9 +15,9 @@ class ServiceSeeder extends Seeder
     public function run(): void
     {
         // Clear existing data to avoid duplicates and handle foreign key constraints
-        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::disableForeignKeyConstraints();
         Service::truncate();
-        \Illuminate\Support\Facades\DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        Schema::enableForeignKeyConstraints();
 
         Service::create([
             'name' => 'كوافير (تسريحات شعر / مكياج)',
