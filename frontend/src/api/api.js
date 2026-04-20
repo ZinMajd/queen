@@ -24,6 +24,15 @@ export const getDresses = (params) => api.get('/dresses', { params });
 export const getDress = (id) => api.get(`/dresses/${id}`);
 export const getCategory = (id) => api.get(`/categories/${id}`);
 
+// Dress Management
+export const createDress = (formData) => api.post('/dresses', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+});
+export const updateDress = (id, formData) => api.post(`/dresses/${id}?_method=PUT`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+});
+export const deleteDress = (id) => api.delete(`/dresses/${id}`);
+
 // Services APIs
 export const getServices = (params) => api.get('/services', { params });
 export const getService = (id) => api.get(`/services/${id}`);

@@ -48,9 +48,90 @@ class DressController extends Controller
         return response()->json($query->with('category')->paginate(12));
     }
 
-    public function show($id)
+    public function store(Request $request)
     {
-        return response()->json(Dress::with('category')->withCount('favorites')->findOrFail($id));
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'category_id' => 'required|exists:categories,id',
+            'type' => 'required|string',
+            'size' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/dresses'), $imageName);
+            $imagePath = '/uploads/dresses/' . $imageName;
+        }
+
+        $dress = Dress::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'category_id' => $request->category_id,
+            'type' => $request->type,
+            'size' => $request->size,
+            'image' => $imagePath,
+            'status' => 'available',
+        ]);
+
+        return response()->json([
+            'message' => 'تم إضافة الفستان بنجاح',
+            'dress' => $dress
+        ], 201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $dress = Dress::findOrFail($id);
+
+        $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string',
+            'price' => 'sometimes|required|numeric',
+            'category_id' => 'sometimes|required|exists:categories,id',
+            'type' => 'sometimes|required|string',
+            'size' => 'sometimes|required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'status' => 'sometimes|required|string',
+        ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($dress->image && file_exists(public_path($dress->image))) {
+                @unlink(public_path($dress->image));
+            }
+
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/dresses'), $imageName);
+            $dress->image = '/uploads/dresses/' . $imageName;
+        }
+
+        $dress->update($request->except('image'));
+
+        return response()->json([
+            'message' => 'تم تحديث الفستان بنجاح',
+            'dress' => $dress
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $dress = Dress::findOrFail($id);
+        
+        // Delete image file
+        if ($dress->image && file_exists(public_path($dress->image))) {
+            @unlink(public_path($dress->image));
+        }
+
+        $dress->delete();
+
+        return response()->json(['message' => 'تم حذف الفستان بنجاح']);
     }
 
     /**

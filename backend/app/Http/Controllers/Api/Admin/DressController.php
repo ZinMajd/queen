@@ -29,8 +29,10 @@ class DressController extends Controller
         $data = $request->only(['name', 'category_id', 'description', 'size', 'type', 'status']);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('uploads/dresses', 'public');
-            $data['image'] = '/storage/' . $path;
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/dresses'), $imageName);
+            $data['image'] = '/uploads/dresses/' . $imageName;
         }
 
         $dress = Dress::create($data);
@@ -57,11 +59,13 @@ class DressController extends Controller
 
         if ($request->hasFile('image')) {
             // Delete old image if exists
-            if ($dress->image && str_contains($dress->image, '/storage/uploads/dresses/')) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $dress->image));
+            if ($dress->image && file_exists(public_path($dress->image))) {
+                @unlink(public_path($dress->image));
             }
-            $path = $request->file('image')->store('uploads/dresses', 'public');
-            $data['image'] = '/storage/' . $path;
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/dresses'), $imageName);
+            $data['image'] = '/uploads/dresses/' . $imageName;
         }
 
         $dress->update($data);

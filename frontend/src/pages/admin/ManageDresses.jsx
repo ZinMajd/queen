@@ -11,7 +11,8 @@ import {
   Check,
   AlertCircle
 } from 'lucide-react';
-import api from '../../api/api';
+import * as api from '../../api/api';
+import MediaRenderer from '../../components/MediaRenderer';
 
 const ManageDresses = () => {
   const [dresses, setDresses] = useState([]);
@@ -37,12 +38,12 @@ const ManageDresses = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [dressesRes, categoriesRes] = await Promise.all([
-        api.get('/admin/dresses'),
-        api.get('/admin/categories')
-      ]);
-      setDresses(dressesRes.data);
-      setCategories(categoriesRes.data);
+        const [dressesRes, categoriesRes] = await Promise.all([
+          api.getDresses(),
+          api.getCategories()
+        ]);
+        setDresses(dressesRes.data.data || []);
+        setCategories(categoriesRes.data);
     } catch (err) {
       console.error('Error fetching data:', err);
     } finally {
@@ -92,13 +93,9 @@ const ManageDresses = () => {
 
     try {
       if (editingDress) {
-        await api.post(`/admin/dresses/${editingDress.id}`, data, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await api.updateDress(editingDress.id, data);
       } else {
-        await api.post('/admin/dresses', data, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await api.createDress(data);
       }
       setIsModalOpen(false);
       fetchData();
@@ -111,7 +108,7 @@ const ManageDresses = () => {
   const handleDelete = async (id) => {
     if (window.confirm('هل أنتِ متأكدة من حذف هذا الفستان؟')) {
       try {
-        await api.delete(`/admin/dresses/${id}`);
+        await api.deleteDress(id);
         fetchData();
       } catch (err) {
         console.error('Delete error:', err);
@@ -192,8 +189,8 @@ const ManageDresses = () => {
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-6">
                       <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 border-2 border-white shadow-sm shrink-0">
-                        <img 
-                            src={dress.image ? (dress.image.startsWith('http') ? dress.image : `http://localhost:8000${dress.image}`) : ''} 
+                        <MediaRenderer 
+                            src={dress.image} 
                             alt="" 
                             className="w-full h-full object-cover" 
                         />
