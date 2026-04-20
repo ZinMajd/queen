@@ -64,7 +64,7 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
                 'user' => $user,
             ]);
-        } catch (\ValidationException $e) {
+        } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
             return response()->json([
