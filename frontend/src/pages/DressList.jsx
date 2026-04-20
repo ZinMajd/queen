@@ -81,24 +81,28 @@ const DressList = () => {
           ...(filters.min_rating ? { min_rating: filters.min_rating } : {})
       };
 
+      console.log('Fetching dresses with:', queryParams);
       const [dressesRes, categoriesRes] = await Promise.all([
-        getDresses(queryParams),
-        getCategories()
+        getDresses(queryParams).catch(e => ({ data: { data: [] } })),
+        getCategories().catch(e => ({ data: [] }))
       ]);
 
+      console.log('Dresses response type:', typeof dressesRes?.data);
+      
+      const dressesData = dressesRes?.data?.data || dressesRes?.data || [];
       if (page === 1) {
-        setDresses(dressesRes?.data?.data || []);
+        setDresses(Array.isArray(dressesData) ? dressesData : []);
       } else {
-        setDresses(prev => [...prev, ...(dressesRes?.data?.data || [])]);
+        setDresses(prev => [...prev, ...(Array.isArray(dressesData) ? dressesData : [])]);
       }
       
       setPagination({
         current_page: dressesRes?.data?.current_page || 1,
         last_page: dressesRes?.data?.last_page || 1
       });
-      setCategories(categoriesRes?.data || []);
+      setCategories(Array.isArray(categoriesRes?.data) ? categoriesRes.data : []);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('CRITICAL Error fetching data:', error);
       setDresses([]);
       setCategories([]);
     } finally {
@@ -195,7 +199,7 @@ const DressList = () => {
           <div className="text-right">
             <p className="text-rose-600 font-bold mb-2 tracking-widest uppercase">مجموعتنا الفاخرة</p>
             <h1 className="text-4xl md:text-5xl font-black text-slate-900">
-                {activeCategory === 'all' ? 'جميع الفساتين' : categories.find(c => c.id.toString() === activeCategory)?.name}
+                {activeCategory === 'all' ? 'جميع الفساتين' : (Array.isArray(categories) ? categories.find(c => c.id?.toString() === activeCategory)?.name : '')}
             </h1>
           </div>
           <button 
