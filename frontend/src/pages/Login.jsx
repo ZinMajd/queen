@@ -30,10 +30,11 @@ const Login = () => {
         navigate('/');
       }
     } catch (err) {
+      const status = err.response?.status;
       const errorMessage = err.response?.data?.errors 
         ? Object.values(err.response.data.errors).flat().join(' ')
         : err.response?.data?.message || 'فشل تسجيل الدخول. يرجى التأكد من البيانات.';
-      setError(errorMessage);
+      setError(`${errorMessage} (Error: ${status || 'Network'})`);
     } finally {
       setLoading(false);
     }
