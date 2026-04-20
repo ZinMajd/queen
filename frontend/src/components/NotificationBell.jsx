@@ -21,10 +21,9 @@ const NotificationBell = () => {
     const fetchNotifications = async () => {
         try {
             const response = await api.getNotifications();
-            if (response.data) {
-                setNotifications(response.data.notifications || []);
-                setUnreadCount(response.data.unread_count || 0);
-            }
+            setNotifications(response?.data?.notifications || []);
+            setUnreadCount(response?.data?.unread_count || 0);
+
         } catch (error) {
             console.error('Error fetching notifications:', error);
         }

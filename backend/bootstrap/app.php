@@ -20,5 +20,14 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create()
-    ->useStoragePath(is_dir('/tmp') && env('APP_ENV') === 'production' ? '/tmp/storage' : null)
-    ->useBootstrapCachePath(is_dir('/tmp') && env('APP_ENV') === 'production' ? '/tmp/bootstrap/cache' : null);
+    ->useStoragePath(is_dir('/tmp') ? '/tmp/storage' : null)
+    ->useBootstrapCachePath(is_dir('/tmp') ? '/tmp/bootstrap/cache' : null);
+
+// Ensure directories exist on Vercel
+if (is_dir('/tmp')) {
+    foreach (['/tmp/storage/framework/views', '/tmp/storage/framework/cache', '/tmp/storage/framework/sessions', '/tmp/bootstrap/cache'] as $path) {
+        if (!is_dir($path)) {
+            @mkdir($path, 0755, true);
+        }
+    }
+}
