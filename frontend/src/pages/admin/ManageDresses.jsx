@@ -244,8 +244,8 @@ const ManageDresses = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-100 flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
-          <div className="relative bg-white w-full max-w-lg rounded-5xl shadow-2xl overflow-hidden animate-in zoom-in slide-in-from-top-4 duration-300">
-            <div className="bg-slate-900 p-8 text-white flex items-center justify-between">
+          <div className="relative bg-white w-full max-w-lg max-h-[90vh] rounded-5xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in slide-in-from-top-4 duration-300">
+            <div className="bg-slate-900 p-6 text-white flex items-center justify-between shrink-0">
               <h2 className="text-2xl font-black">{editingDress ? 'تعديل الفستان' : 'إضافة فستان جديد'}</h2>
               <button 
                 onClick={() => setIsModalOpen(false)}
@@ -254,8 +254,8 @@ const ManageDresses = () => {
                 <X size={24} />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-8 space-y-6">
-              <div className="grid grid-cols-1 gap-6">
+            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto custom-scrollbar">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label className="block text-slate-700 font-bold mb-3">اسم الفستان</label>
                   <input 
@@ -324,7 +324,7 @@ const ManageDresses = () => {
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-4 border-t border-slate-50">
+              <div className="flex gap-4 pt-4 border-t border-slate-50 shrink-0">
                 <button 
                    type="submit"
                    className="grow bg-slate-900 border-2 border-slate-900 hover:bg-rose-600 hover:border-rose-600 text-white py-5 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3"
