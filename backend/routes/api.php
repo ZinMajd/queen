@@ -10,7 +10,8 @@ use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\Admin\SettingController;
 
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::any('/login', [AuthController::class, 'login']);
+Route::get('/test', function() { return response()->json(['status' => 'OK']); });
 
 Route::get('/settings', [SettingController::class, 'getPublicSettings']);
 
