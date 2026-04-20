@@ -1,5 +1,5 @@
 import React from 'react';
-import { BASE_URL } from '../api/api';
+import { backendBase } from '../api/api';
 
 /**
  * MediaRenderer component handles both image and video rendering
@@ -14,7 +14,6 @@ const MediaRenderer = ({ src, alt, className }) => {
   const isVideo = srcString.endsWith('.mp4') || srcString.endsWith('.webm');
   
   // Use the dynamic base URL from api.js
-  const backendBase = 'https://queen-bay.vercel.app';
   let fullSrc = src || '';
   
   if (src && !src.startsWith('http')) {

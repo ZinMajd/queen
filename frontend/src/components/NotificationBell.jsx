@@ -29,7 +29,7 @@ const NotificationBell = () => {
 
         } catch (error) {
             // Silently fail to keep terminal clean during dev/routing issues
-            if (process.env.NODE_ENV === 'development') {
+            if (import.meta.env.DEV) {
                 console.warn('Notifications fetch skipped or failed.');
             }
         }

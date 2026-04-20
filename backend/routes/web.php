@@ -9,3 +9,7 @@ Route::get('/', function () {
         'status' => 'healthy'
     ]);
 });
+
+Route::get('/api-test-web', function () {
+    return response()->json(['message' => 'API route in web.php works!']);
+});

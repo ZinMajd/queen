@@ -48,6 +48,12 @@ class DressController extends Controller
         return response()->json($query->with('category')->paginate(12));
     }
 
+    public function show($id)
+    {
+        $dress = Dress::with('category')->withCount('favorites')->findOrFail($id);
+        return response()->json($dress);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -101,7 +107,6 @@ class DressController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if ($dress->image && file_exists(public_path($dress->image))) {
                 @unlink(public_path($dress->image));
             }
@@ -123,8 +128,7 @@ class DressController extends Controller
     public function destroy($id)
     {
         $dress = Dress::findOrFail($id);
-        
-        // Delete image file
+
         if ($dress->image && file_exists(public_path($dress->image))) {
             @unlink(public_path($dress->image));
         }

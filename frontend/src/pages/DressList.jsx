@@ -185,8 +185,8 @@ const DressList = () => {
           {Array.isArray(categories) && categories.map((cat) => (
             <button 
               key={cat.id}
-              onClick={() => setActiveCategory(cat.id.toString())}
-              className={`px-8 py-3 rounded-2xl whitespace-nowrap transition-all font-black text-sm uppercase tracking-widest shadow-lg ${activeCategory === cat.id.toString() ? 'bg-rose-600 text-white scale-105' : 'bg-white text-slate-500 border border-slate-100 hover:border-rose-200'}`}
+              onClick={() => setActiveCategory(cat.id?.toString())}
+              className={`px-8 py-3 rounded-2xl whitespace-nowrap transition-all font-black text-sm uppercase tracking-widest shadow-lg ${activeCategory === cat.id?.toString() ? 'bg-rose-600 text-white scale-105' : 'bg-white text-slate-500 border border-slate-100 hover:border-rose-200'}`}
             >
               {cat.name}
             </button>

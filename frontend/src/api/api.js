@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-export const BASE_URL = 'https://queenn.vercel.app/api';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+export const backendBase = isLocal ? 'http://localhost:8000' : 'https://queen-bay.vercel.app';
+export const BASE_URL = `${backendBase}/api`;
 const API_BASE_URL = BASE_URL;
 
 const api = axios.create({
