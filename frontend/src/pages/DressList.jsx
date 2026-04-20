@@ -87,9 +87,9 @@ const DressList = () => {
       ]);
 
       if (page === 1) {
-        setDresses(dressesRes.data.data);
+        setDresses(dressesRes.data.data || []);
       } else {
-        setDresses(prev => [...prev, ...dressesRes.data.data]);
+        setDresses(prev => [...prev, ...(dressesRes.data.data || [])]);
       }
       
       setPagination({
