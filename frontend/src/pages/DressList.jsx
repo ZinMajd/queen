@@ -178,7 +178,7 @@ const DressList = () => {
           >
             الكل
           </button>
-          {categories.map((cat) => (
+          {Array.isArray(categories) && categories.map((cat) => (
             <button 
               key={cat.id}
               onClick={() => setActiveCategory(cat.id.toString())}
@@ -328,7 +328,7 @@ const DressList = () => {
         ) : (
           <div className="flex flex-col gap-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
-              {dresses.map((dress) => (
+              {Array.isArray(dresses) && dresses.map((dress) => (
                 /* ... rest of mapping ... */
                 <div key={dress.id} className="group bg-white rounded-4xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 border border-slate-100 flex flex-col">
                   {/* ... contents ... */}
