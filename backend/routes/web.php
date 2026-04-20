@@ -14,19 +14,20 @@ Route::get('/api-test-web', function () {
     return response()->json(['message' => 'API route in web.php works!']);
 });
 
-Route::get('/api/test', function() { 
-    return response()->json(['status' => 'OK', 'source' => 'web.php']); 
-});
-
-// Emergency routes directly in web.php
+// Version 1: With /api prefix
+Route::get('/api/test', function() { return response()->json(['status' => 'OK', 'v' => 1]); });
 Route::get('/api/dresses', [\App\Http\Controllers\Api\DressController::class, 'index']);
 Route::get('/api/categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
 
-// Seeding route in web.php
-Route::get('/api/seed-basic', function() {
+// Version 2: Direct (No /api prefix) - Just in case Vercel strips it
+Route::get('/test', function() { return response()->json(['status' => 'OK', 'v' => 2]); });
+Route::get('/dresses', [\App\Http\Controllers\Api\DressController::class, 'index']);
+Route::get('/categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
+
+// Seeding logic (Accessible from both)
+$seedLogic = function() {
     try {
         $cat = \App\Models\Category::firstOrCreate(['name' => 'فساتين زفاف', 'slug' => 'wedding-dresses']);
-        
         \App\Models\Dress::create([
             'name' => 'فستان الملكة الفاخر',
             'description' => 'فستان زفاف مطرز بالكريستال مع طرحة طويلة',
@@ -49,4 +50,7 @@ Route::get('/api/seed-basic', function() {
     } catch (\Exception $e) {
         return "Error: " . $e->getMessage();
     }
-});
+};
+
+Route::get('/api/seed-basic', $seedLogic);
+Route::get('/seed-basic', $seedLogic);
