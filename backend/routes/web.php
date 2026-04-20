@@ -13,3 +13,7 @@ Route::get('/', function () {
 Route::get('/api-test-web', function () {
     return response()->json(['message' => 'API route in web.php works!']);
 });
+
+// Emergency route directly in web.php
+Route::get('/api/dresses', [\App\Http\Controllers\Api\DressController::class, 'index']);
+Route::get('/api/categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
