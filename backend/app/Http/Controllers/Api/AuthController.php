@@ -34,11 +34,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        if (!$request->isMethod('post')) {
-             return response()->json(['message' => 'خطأ في نوع الطلب: السيرفر استلم الطلب بطريقة ' . $request->method() . ' بدلاً من POST. يرجى تجربة متصفح آخر أو نافذة سرية.'], 405);
-        }
         try {
             $user = User::where('email', $request->email)->first();
 

@@ -1,8 +1,7 @@
 {
     "version": 2,
-    "trailingSlash": false,
     "functions": {
-        "public/index.php": {
+        "api/index.php": {
             "runtime": "vercel-php@0.7.1"
         }
     },
@@ -13,11 +12,11 @@
         },
         {
             "src": "/api/(.*)",
-            "dest": "/public/index.php"
+            "dest": "/api/index.php"
         },
         {
             "src": "/(.*)",
-            "dest": "/public/index.php"
+            "dest": "/api/index.php"
         }
     ],
     "env": {
