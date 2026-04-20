@@ -280,7 +280,7 @@ const ManageDresses = () => {
                     className="w-full bg-slate-50 border-2 border-slate-100 focus:border-rose-500 focus:bg-white rounded-2xl py-4 px-6 outline-none transition-all font-bold"
                   >
                     <option value="">اختر القسم</option>
-                    {categories.map(cat => (
+                    {Array.isArray(categories) && categories.map(cat => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>
                     ))}
                   </select>
