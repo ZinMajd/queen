@@ -87,18 +87,20 @@ const DressList = () => {
       ]);
 
       if (page === 1) {
-        setDresses(dressesRes.data.data || []);
+        setDresses(dressesRes?.data?.data || []);
       } else {
-        setDresses(prev => [...prev, ...(dressesRes.data.data || [])]);
+        setDresses(prev => [...prev, ...(dressesRes?.data?.data || [])]);
       }
       
       setPagination({
-        current_page: dressesRes.data.current_page,
-        last_page: dressesRes.data.last_page
+        current_page: dressesRes?.data?.current_page || 1,
+        last_page: dressesRes?.data?.last_page || 1
       });
-      setCategories(categoriesRes.data);
+      setCategories(categoriesRes?.data || []);
     } catch (error) {
       console.error('Error fetching data:', error);
+      setDresses([]);
+      setCategories([]);
     } finally {
       setLoading(false);
       setLoadingMore(false);

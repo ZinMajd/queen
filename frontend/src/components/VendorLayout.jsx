@@ -22,8 +22,15 @@ const VendorLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [user] = useState(() => {
-    const storedUser = localStorage.getItem('user');
-    return storedUser ? JSON.parse(storedUser) : null;
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser && storedUser !== "undefined") {
+        return JSON.parse(storedUser);
+      }
+    } catch (e) {
+      console.error("Error parsing user:", e);
+    }
+    return null;
   });
 
   useEffect(() => {
