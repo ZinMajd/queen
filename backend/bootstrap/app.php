@@ -17,9 +17,18 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'vendor' => \App\Http\Middleware\VendorMiddleware::class,
         ]);
+
+        $middleware->statefulApi();
+
+        // Ensure always return JSON
+        $middleware->appendToGroup('api', [
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->shouldRenderJsonWhen(function ($request, $e) {
+            return true;
+        });
     })->create()
     ->useStoragePath(is_dir('/tmp') ? '/tmp' : null);
 
