@@ -43,7 +43,8 @@ const ManageDresses = () => {
           api.getCategories()
         ]);
         setDresses(dressesRes.data.data || []);
-        setCategories(categoriesRes.data);
+        // Handle both simple array and paginated categories
+        setCategories(categoriesRes.data.data || categoriesRes.data || []);
     } catch (err) {
       console.error('Error fetching data:', err);
     } finally {
