@@ -101,9 +101,9 @@ const ManageDresses = () => {
       fetchData();
     } catch (err) {
       console.error('Submit error:', err);
-      const message = err.response?.data?.errors 
+      const message = err.response?.data?.message || (err.response?.data?.errors 
         ? Object.values(err.response.data.errors).flat().join(' ')
-        : 'حدث خطأ أثناء حفظ البيانات';
+        : 'حدث خطأ أثناء حفظ البيانات');
       alert(message);
     }
   };

@@ -17,26 +17,39 @@ class DressController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'description' => 'required|string',
-            'size' => 'nullable|string',
-            'type' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'category_id' => 'required|exists:categories,id',
+                'description' => 'required|string',
+                'size' => 'nullable|string',
+                'type' => 'required|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            ]);
 
-        $data = $request->only(['name', 'category_id', 'description', 'size', 'type', 'status']);
+            $data = $request->only(['name', 'category_id', 'description', 'size', 'type', 'status']);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('uploads/dresses'), $imageName);
-            $data['image'] = '/uploads/dresses/' . $imageName;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                
+                $uploadPath = public_path('uploads/dresses');
+                if (!file_exists($uploadPath)) {
+                    @mkdir($uploadPath, 0777, true);
+                }
+
+                $image->move($uploadPath, $imageName);
+                $data['image'] = '/uploads/dresses/' . $imageName;
+            }
+
+            $dress = Dress::create($data);
+            return response()->json($dress->load('category'), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'فشل الحفظ: ' . $e->getMessage(),
+                'error' => $e->getTraceAsString()
+            ], 500);
         }
-
-        $dress = Dress::create($data);
-        return response()->json($dress->load('category'), 201);
     }
 
     public function show($id)
