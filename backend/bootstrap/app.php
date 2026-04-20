@@ -20,8 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create()
-    ->useStoragePath(is_dir('/tmp') ? '/tmp/storage' : null)
-    ->useBootstrapCachePath(is_dir('/tmp') ? '/tmp/bootstrap/cache' : null);
+    ->useStoragePath(is_dir('/tmp') ? '/tmp' : null);
 
 // Ensure directories exist on Vercel
 if (is_dir('/tmp')) {
