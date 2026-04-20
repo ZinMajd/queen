@@ -19,13 +19,19 @@ const NotificationBell = () => {
     const dropdownRef = useRef(null);
 
     const fetchNotifications = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
         try {
             const response = await api.getNotifications();
             setNotifications(response?.data?.notifications || []);
             setUnreadCount(response?.data?.unread_count || 0);
 
         } catch (error) {
-            console.error('Error fetching notifications:', error);
+            // Silently fail to keep terminal clean during dev/routing issues
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('Notifications fetch skipped or failed.');
+            }
         }
     };
 
