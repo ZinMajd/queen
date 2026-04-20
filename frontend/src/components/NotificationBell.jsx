@@ -150,7 +150,7 @@ const NotificationBell = () => {
                             </div>
                         ) : (
                             <div className="divide-y divide-slate-50">
-                                {notifications.map((notification) => (
+                                {Array.isArray(notifications) && notifications.map((notification) => (
                                     <div 
                                         key={notification.id}
                                         className={`p-5 flex gap-4 hover:bg-slate-50/80 transition-all cursor-pointer group/item text-right ${!notification.read_at ? 'bg-rose-50/30' : ''}`}

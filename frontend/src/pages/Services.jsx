@@ -99,14 +99,14 @@ const Services = () => {
       const response = await getServices(queryParams);
       
       if (page === 1) {
-        setServices(response.data.data);
+        setServices(response?.data?.data || []);
       } else {
-        setServices(prev => [...prev, ...response.data.data]);
+        setServices(prev => [...prev, ...(response?.data?.data || [])]);
       }
       
       setPagination({
-        current_page: response.data.current_page,
-        last_page: response.data.last_page
+        current_page: response?.data?.current_page || 1,
+        last_page: response?.data?.last_page || 1
       });
     } catch (error) {
       console.error('Error fetching services:', error);
@@ -239,7 +239,7 @@ const Services = () => {
           </div>
         ) : (
           <div className="space-y-12">
-            {services.map((service, index) => (
+            {Array.isArray(services) && services.map((service, index) => (
               <div 
                 key={service.id} 
                 className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 border border-slate-100 group`}
