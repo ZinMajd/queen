@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\Admin\SettingController;
 
 Route::post('api/register', [AuthController::class, 'register']);
-Route::any('api/login', [AuthController::class, 'login']);
+Route::any('auth/login', [AuthController::class, 'login']);
 
 Route::get('api/settings', [SettingController::class, 'getPublicSettings']);
 
