@@ -36,33 +36,41 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+        try {
+            $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['البريد الإلكتروني أو كلمة المرور غير صحيحة.'],
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'email' => ['البريد الإلكتروني أو كلمة المرور غير صحيحة.'],
+                ]);
+            }
+
+            if ($user->role === 'مزود خدمة' && $user->status === 'pending') {
+                throw ValidationException::withMessages([
+                    'email' => ['حسابك قيد المراجعة حالياً. يرجى الانتظار حتى يتم تفعيله.'],
+                ]);
+            }
+
+            if ($user->status === 'rejected') {
+                throw ValidationException::withMessages([
+                    'email' => ['تم رفض حسابك. يرجى التواصل مع الإدارة.'],
+                ]);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user,
             ]);
+        } catch (\ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'حدث خطأ تقني أثناء تسجيل الدخول: ' . $e->getMessage()
+            ], 500);
         }
-
-        if ($user->role === 'مزود خدمة' && $user->status === 'pending') {
-            throw ValidationException::withMessages([
-                'email' => ['حسابك قيد المراجعة حالياً. يرجى الانتظار حتى يتم تفعيله.'],
-            ]);
-        }
-
-        if ($user->status === 'rejected') {
-            throw ValidationException::withMessages([
-                'email' => ['تم رفض حسابك. يرجى التواصل مع الإدارة.'],
-            ]);
-        }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user,
-        ]);
     }
 
     public function logout(Request $request)
