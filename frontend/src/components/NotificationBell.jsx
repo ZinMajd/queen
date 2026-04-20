@@ -28,38 +28,37 @@ const NotificationBell = () => {
             setUnreadCount(response?.data?.unread_count || 0);
 
         } catch (error) {
-            // Silently fail to keep terminal clean during dev/routing issues
             if (import.meta.env.DEV) {
-                console.warn('Notifications fetch skipped or failed.');
+                console.warn('Notifications fetch skipped.');
             }
         }
     };
 
     useEffect(() => {
         fetchNotifications();
-        
-        // Automatic polling every 60 seconds
-        const interval = setInterval(fetchNotifications, 60000);
-        
-        // Close dropdown when clicking outside
+        const interval = setInterval(fetchNotifications, 30000);
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsOpen(false);
             }
         };
-        
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            clearInterval(interval);
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isOpen]);
 
     const handleMarkAsRead = async (id) => {
         try {
             await api.markNotificationRead(id);
-            // Local update to avoid flicker
-            setNotifications(notifications.map(n => n.id === id ? { ...n, read_at: new Date() } : n));
+            setNotifications(prev => 
+                prev.map(n => n.id === id ? { ...n, read_at: new Date() } : n)
+            );
             setUnreadCount(prev => Math.max(0, prev - 1));
         } catch (error) {
             console.error('Error marking as read:', error);
@@ -67,48 +66,46 @@ const NotificationBell = () => {
     };
 
     const handleMarkAllRead = async () => {
-        setLoading(true);
         try {
             await api.markAllNotificationsRead();
-            setNotifications(notifications.map(n => ({ ...n, read_at: new Date() })));
+            setNotifications(prev => prev.map(n => ({ ...n, read_at: new Date() })));
             setUnreadCount(0);
         } catch (error) {
             console.error('Error marking all as read:', error);
-        } finally {
-            setLoading(false);
         }
     };
 
     const handleClearAll = async () => {
         if (!window.confirm('هل أنت متأكد من مسح جميع الإشعارات؟')) return;
-        setLoading(true);
         try {
             await api.clearAllNotifications();
             setNotifications([]);
             setUnreadCount(0);
-            setIsOpen(false);
         } catch (error) {
             console.error('Error clearing notifications:', error);
-        } finally {
-            setLoading(false);
         }
     };
 
-    const formatDate = (dateString) => {
+    const getRelativeTime = (dateString) => {
         const date = new Date(dateString);
-        return date.toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' });
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) return 'الآن';
+        if (diffInSeconds < 3600) return `منذ ${Math.floor(diffInSeconds / 60)} د`;
+        if (diffInSeconds < 86400) return `منذ ${Math.floor(diffInSeconds / 3600)} س`;
+        return date.toLocaleDateString('ar-EG');
     };
 
     return (
         <div className="relative" ref={dropdownRef}>
-            {/* Bell Button */}
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className={`relative p-2.5 rounded-2xl transition-all border border-slate-100 hover:bg-slate-50 group ${isOpen ? 'bg-rose-50 border-rose-100' : 'bg-white'}`}
+                className={isOpen ? "relative p-2.5 rounded-2xl transition-all border border-rose-100 bg-rose-50" : "relative p-2.5 rounded-2xl transition-all border border-slate-100 bg-white hover:bg-slate-50 group"}
             >
                 <Bell size={22} className={isOpen ? 'text-rose-600' : 'text-slate-600 group-hover:text-rose-600'} />
                 {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm animate-bounce">
+                    <span className="absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm">
                         {unreadCount > 9 ? '+9' : unreadCount}
                     </span>
                 )}
@@ -116,7 +113,7 @@ const NotificationBell = () => {
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute left-0 mt-4 w-80 md:w-96 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="absolute left-0 mt-4 w-80 md:w-96 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-50">
                     <div className="bg-slate-900 p-5 text-white flex justify-between items-center">
                         <div>
                             <h3 className="text-lg font-black tracking-tight">الإشعارات</h3>
@@ -156,31 +153,23 @@ const NotificationBell = () => {
                                         className={`p-5 flex gap-4 hover:bg-slate-50/80 transition-all cursor-pointer group/item text-right ${!notification.read_at ? 'bg-rose-50/30' : ''}`}
                                         onClick={() => !notification.read_at && handleMarkAsRead(notification.id)}
                                     >
-                                        <div className={`w-12 h-12 rounded-2xl shrink-0 flex items-center justify-center shadow-sm ${notification.data.type === 'booking_status' ? 'bg-indigo-50 text-indigo-600' : 'bg-green-50 text-green-600'}`}>
-                                            {notification.data.type === 'booking_status' ? <MessageSquare size={20} /> : <UserCheck size={20} />}
+                                        <div className={`w-12 h-12 rounded-2xl shrink-0 flex items-center justify-center shadow-sm ${notification.data?.type === 'booking_status' ? 'bg-indigo-50 text-indigo-600' : 'bg-green-50 text-green-600'}`}>
+                                            {notification.data?.type === 'booking_status' ? <UserCheck size={20} /> : <MessageSquare size={20} />}
                                         </div>
-                                        <div className="grow space-y-1">
-                                            <div className="flex justify-between items-start gap-2">
-                                                <span className="text-[10px] text-slate-300 font-bold flex items-center gap-1">
-                                                    <Clock size={10} /> {formatDate(notification.created_at)}
-                                                </span>
-                                                {!notification.read_at && <div className="w-2 h-2 bg-rose-600 rounded-full shrink-0 mt-1"></div>}
-                                            </div>
-                                            <p className={`text-sm leading-relaxed ${!notification.read_at ? 'font-black text-slate-900' : 'font-medium text-slate-400'}`}>
-                                                {notification.data.message}
+                                        <div className="flex flex-col gap-1 grow">
+                                            <p className={`text-sm leading-relaxed ${!notification.read_at ? 'text-slate-900 font-bold' : 'text-slate-600'}`}>
+                                                {notification.data?.message}
                                             </p>
+                                            <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-medium">
+                                                <Clock size={10} />
+                                                {getRelativeTime(notification.created_at)}
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         )}
                     </div>
-
-                    {notifications.length > 0 && (
-                        <div className="p-4 border-t border-slate-100 bg-slate-50/50 text-center">
-                            <button className="text-xs font-black text-slate-400 hover:text-rose-600 transition-colors uppercase tracking-widest">إغلاق القائمة</button>
-                        </div>
-                    )}
                 </div>
             )}
         </div>
