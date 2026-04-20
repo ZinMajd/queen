@@ -34,9 +34,14 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(LoginRequest $request)
+    public function login(\Illuminate\Http\Request $request)
     {
         try {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+
             $user = User::where('email', $request->email)->first();
 
             if (! $user || ! Hash::check($request->password, $user->password)) {
