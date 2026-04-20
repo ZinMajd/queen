@@ -14,7 +14,7 @@ import {
   CheckCircle,
   Clock
 } from 'lucide-react';
-import api from '../../api/api';
+import * as api from '../../api/api';
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -29,10 +29,12 @@ const ManageUsers = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/admin/users');
-      setUsers(response.data);
+      const response = await api.adminGetUsers();
+      // Handle Laravel pagination: response.data.data
+      setUsers(response.data.data || response.data || []);
     } catch (err) {
       console.error('Error fetching users:', err);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -40,9 +42,9 @@ const ManageUsers = () => {
 
   const handleUpdateStatus = async (id, status) => {
     try {
-      await api.put(`/admin/users/${id}/status`, { status });
+      await api.updateUserStatus(id, status);
       // Update local state for immediate feedback
-      setUsers(users.map(u => u.id === id ? { ...u, status } : u));
+      setUsers(prev => prev.map(u => u.id === id ? { ...u, status } : u));
     } catch (err) {
       console.error('Status update error:', err);
       alert('حدث خطأ أثناء تحديث حالة المستخدم');
@@ -52,8 +54,8 @@ const ManageUsers = () => {
   const handleDelete = async (id) => {
     if (window.confirm('هل أنتِ متأكدة من حذف هذا المستخدم نهائياً؟ لا يمكن التراجع عن هذا الإجراء.')) {
       try {
-        await api.delete(`/admin/users/${id}`);
-        setUsers(users.filter(u => u.id !== id));
+        await api.deleteUser(id);
+        setUsers(prev => prev.filter(u => u.id !== id));
       } catch (err) {
         console.error('Delete error:', err);
       }
