@@ -10,6 +10,8 @@ import {
   TrendingDown,
   ShoppingBag
 } from 'lucide-react';
+import api from '../../api/api';
+
 
 // eslint-disable-next-line no-unused-vars
 const StatCard = ({ title, value, icon: Icon, color, trend, trendValue }) => (
@@ -46,16 +48,15 @@ const VendorDashboard = () => {
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    // In a real app, we fetch vendor-specific stats
-    // Placeholder logic for now
-    setTimeout(() => {
-      setStats({
-        totalServices: 4,
-        totalBookings: 12,
-        pendingBookings: 3,
-        completedBookings: 8
-      });
-    }, 800);
+    const fetchStats = async () => {
+      try {
+        const response = await api.get('/vendor/dashboard');
+        setStats(response.data);
+      } catch (err) {
+        console.error('Error fetching dashboard stats:', err);
+      }
+    };
+    fetchStats();
   }, []);
 
   return (

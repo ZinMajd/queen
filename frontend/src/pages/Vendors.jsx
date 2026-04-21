@@ -3,6 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, Award, ShieldCheck, MapPin, Loader2, Search, X, Filter } from 'lucide-react';
 import { getVendors } from '../api/api';
 
+import hairImg from '../assets/vendors/hairdresser.webp';
+import photoImg from '../assets/vendors/photography.jpeg';
+import plannerImg from '../assets/vendors/planner.jpeg';
+
+
 const Vendors = () => {
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,7 +84,7 @@ const Vendors = () => {
             >
               الكل
             </button>
-            {['تجميل ومكياج', 'تصوير احترافي', 'منسق حفلات'].map((type) => (
+            {['كوافير', 'تصوير احترافي', 'منسق حفلات'].map((type) => (
               <button 
                 key={type}
                 onClick={() => setActiveCategory(type)}
@@ -115,7 +120,12 @@ const Vendors = () => {
               <div key={vendor.id} className="bg-white rounded-4xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 group">
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src={vendor.image} 
+                    src={
+                        (vendor.category || '').includes('كوافير') || (vendor.category || '').includes('تجميل') ? hairImg :
+                        (vendor.category || '').includes('تصوير') ? photoImg :
+                        (vendor.category || '').includes('منسق') || (vendor.category || '').includes('حفلات') ? plannerImg :
+                        vendor.image
+                    } 
                     alt={vendor.name} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                   />
@@ -127,7 +137,7 @@ const Vendors = () => {
                   )}
                   <div className="absolute bottom-6 right-6 text-white text-right">
                     <div className="text-sm font-bold bg-white/20 backdrop-blur-md inline-block px-3 py-1 rounded-lg mb-2">
-                      {vendor.category}
+                      {vendor.category === 'تجميل ومكياج' ? 'كوافير' : vendor.category}
                     </div>
                   </div>
                 </div>

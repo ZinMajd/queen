@@ -80,8 +80,8 @@ const ManageBookings = () => {
     <div className="space-y-10 animate-in fade-in duration-700 p-4 md:p-10">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 mb-2">طلبات الحجز</h1>
-          <p className="text-slate-500 font-medium">راجعي الطلبات، اتفقي على السعر واتساب، ثم اضغطي "تأكيد" لحجز الفستان</p>
+          <h1 className="text-4xl font-black text-slate-900 mb-2">طلبات الحجز والبيع</h1>
+          <p className="text-slate-500 font-medium">راجعي الطلبات، اتفقي على السعر واتساب، ثم اضغطي "تأكيد" للطلب</p>
         </div>
       </div>
 
@@ -139,12 +139,20 @@ const ManageBookings = () => {
                         </div>
                     </div>
                     <div>
-                        <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase">تاريخ المناسبة</p>
-                        <p className="font-black text-slate-800 flex items-center gap-2">
-                             <Calendar className="text-rose-600" size={16} />
-                             {booking.booking_date}
+                        <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase">نوع الطلب</p>
+                        <p className={`font-black ${booking.type === 'sale' ? 'text-green-600' : 'text-blue-600'}`}>
+                             {booking.type === 'sale' ? 'شراء فستان' : 'حجز إيجار'}
                         </p>
                     </div>
+                    {booking.type === 'rent' && (
+                      <div>
+                          <p className="text-[10px] text-slate-400 font-bold mb-1 uppercase">تاريخ المناسبة</p>
+                          <p className="font-black text-slate-800 flex items-center gap-2">
+                               <Calendar className="text-rose-600" size={16} />
+                               {booking.booking_date}
+                          </p>
+                      </div>
+                    )}
                 </div>
 
                 <div className="flex flex-col items-end gap-4 w-full lg:w-auto">

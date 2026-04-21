@@ -25,9 +25,13 @@ class DressController extends Controller
                 'size' => 'nullable|string',
                 'type' => 'required|string',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+                'is_for_sale' => 'boolean',
+                'is_for_rent' => 'boolean',
+                'sale_price' => 'nullable|string',
+                'rent_price' => 'nullable|string',
             ]);
 
-            $data = $request->only(['name', 'category_id', 'description', 'size', 'type', 'status']);
+            $data = $request->only(['name', 'category_id', 'description', 'size', 'type', 'status', 'is_for_sale', 'is_for_rent', 'sale_price', 'rent_price']);
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -66,9 +70,13 @@ class DressController extends Controller
             'category_id' => 'sometimes|required|exists:categories,id',
             'description' => 'sometimes|required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'is_for_sale' => 'boolean',
+            'is_for_rent' => 'boolean',
+            'sale_price' => 'nullable|string',
+            'rent_price' => 'nullable|string',
         ]);
 
-        $data = $request->only(['name', 'category_id', 'description', 'size', 'type', 'status']);
+        $data = $request->only(['name', 'category_id', 'description', 'size', 'type', 'status', 'is_for_sale', 'is_for_rent', 'sale_price', 'rent_price']);
 
         if ($request->hasFile('image')) {
             // Delete old image if exists

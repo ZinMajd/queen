@@ -23,9 +23,14 @@ import { getServices, toggleFavorite } from '../api/api';
 import MediaRenderer from '../components/MediaRenderer';
 import WhatsAppPopup from '../components/WhatsAppPopup';
 
+import hairImg from '../assets/vendors/hairdresser.webp';
+import photoImg from '../assets/vendors/photography.jpeg';
+import plannerImg from '../assets/vendors/planner.jpeg';
+
+
 const ServiceIcon = ({ type, size = 24, className = "" }) => {
   switch (type) {
-    case 'تجميل ومكياج': return <Stars size={size} className={className} />;
+    case 'كوافير': return <Stars size={size} className={className} />;
     case 'تصوير احترافي': return <Camera size={size} className={className} />;
     case 'منسق حفلات': return <MapPin size={size} className={className} />;
     default: return <Scissors size={size} className={className} />;
@@ -195,7 +200,7 @@ const Services = () => {
             >
               الكل
             </button>
-            {['تجميل ومكياج', 'تصوير احترافي', 'منسق حفلات'].map((type) => (
+            {['كوافير', 'تصوير احترافي', 'منسق حفلات'].map((type) => (
               <button 
                 key={type}
                 onClick={() => setFilters({...filters, service_type: type})}
@@ -261,7 +266,12 @@ const Services = () => {
                 {/* Image Section */}
                 <div className="lg:w-1/2 relative h-96 overflow-hidden">
                   <MediaRenderer 
-                    src={service.image} 
+                    src={
+                        (service.service_type || '').includes('كوافير') || (service.service_type || '').includes('تجميل') ? hairImg :
+                        (service.service_type || '').includes('تصوير') ? photoImg :
+                        (service.service_type || '').includes('منسق') || (service.service_type || '').includes('حفلات') ? plannerImg :
+                        service.image
+                    } 
                     alt={service.name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
@@ -272,7 +282,9 @@ const Services = () => {
                             <div className="bg-white bg-opacity-20 inline-flex p-4 rounded-3xl mb-4">
                                 <ServiceIcon type={service.service_type} size={30} className="text-white" />
                             </div>
-                            <h3 className="text-3xl font-black mb-2">{service.service_type}</h3>
+                            <h3 className="text-3xl font-black mb-2">
+                                {(service.service_type || '').includes('كوافير') || (service.service_type || '').includes('تجميل') ? 'كوافير' : service.service_type}
+                            </h3>
                             <p className="text-white text-opacity-80 font-medium">خدمة متميزة بلمسة ملكية</p>
                         </div>
                         <div className="flex flex-col items-center gap-3">
@@ -317,8 +329,8 @@ const Services = () => {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4 items-center justify-end">
-                    <div className="text-3xl font-black text-rose-600 ml-auto order-last sm:order-first">
-                      تبدأ من {service.price}$
+                    <div className="text-xl font-black text-rose-600 ml-auto order-last sm:order-first">
+                      السعر حسب الاتفاق (واتساب)
                     </div>
                     <button 
                       onClick={() => { setWhatsappMsg(`استفسار عن خدمة: ${service.name}`); setWhatsappOpen(true); }}
@@ -353,20 +365,20 @@ const Services = () => {
         )}
 
         {/* Contact CTA */}
-        <div className="mt-32 bg-rose-600 rounded-3xl p-12 lg:p-20 text-center text-white relative overflow-hidden shadow-2xl">
+        <div className="mt-20 bg-rose-800 rounded-[2.5rem] p-8 lg:p-12 text-center text-white relative overflow-hidden shadow-2xl max-w-4xl mx-auto">
           <div className="relative z-10">
-            <h2 className="text-4xl md:text-5xl font-black mb-8 leading-tight">
+            <h2 className="text-2xl md:text-3xl font-black mb-4 leading-tight">
               هل لديكِ استفسار عن خدماتنا؟
             </h2>
-            <p className="text-xl text-rose-100 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            <p className="text-base text-rose-100 mb-8 max-w-xl mx-auto font-bold leading-relaxed">
               نحن هنا لمساعدتكِ في كل خطوة. طاقم العمل لدينا جاهز للرد على جميع استفساراتكِ على مدار الساعة.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex justify-center">
               <button 
                 onClick={() => { setWhatsappMsg('تواصل مع خدمات الملكة'); setWhatsappOpen(true); }}
-                className="bg-white text-rose-600 px-12 py-5 rounded-2xl font-black text-xl hover:bg-slate-50 transition-all shadow-xl flex items-center justify-center gap-3 active:scale-95"
+                className="bg-white text-rose-600 px-8 py-4 rounded-2xl font-black text-lg hover:bg-slate-50 transition-all shadow-xl flex items-center justify-center gap-3 active:scale-95"
               >
-                <MessageSquare size={24} /> واتساب مباشر
+                <MessageSquare size={22} /> واتساب مباشر
               </button>
             </div>
           </div>

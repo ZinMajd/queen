@@ -11,39 +11,55 @@ use Illuminate\Support\Facades\Storage;
 class ServiceController extends Controller
 {
     /**
-     * Display a listing of the vendor's services.
+     * الحصول على سجل المزود للمستخدم المسجّل
+     */
+    private function getVendor()
+    {
+        $vendor = Auth::user()->vendor;
+        if (!$vendor) {
+            abort(404, 'لم يتم العثور على حساب المزود.');
+        }
+        return $vendor;
+    }
+
+    /**
+     * عرض قائمة خدمات المزود
      */
     public function index()
     {
-        $services = Service::where('vendor_id', Auth::id())->latest()->get();
+        $vendor = $this->getVendor();
+        $services = Service::where('vendor_id', $vendor->id)->latest()->get();
         return response()->json($services);
     }
 
     /**
-     * Store a newly created service.
+     * إضافة خدمة جديدة
      */
     public function store(Request $request)
     {
+        $vendor = $this->getVendor();
+
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'name'         => 'required|string|max:255',
+            'description'  => 'required|string',
             'service_type' => 'required|string',
-            'price' => 'required|numeric',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'price'        => 'nullable|numeric|min:0',
+            'image_file'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
         $imagePath = null;
         if ($request->hasFile('image_file')) {
-            $imagePath = '/storage/' . $request->file('image_file')->store('services', 'public');
+            $file = $request->file('image_file');
+            $imagePath = '/storage/' . $file->store('services', 'public');
         }
 
         $service = Service::create([
-            'vendor_id' => Auth::id(),
-            'name' => $request->name,
-            'description' => $request->description,
+            'vendor_id'    => $vendor->id,
+            'name'         => $request->name,
+            'description'  => $request->description,
             'service_type' => $request->service_type,
-            'price' => $request->price,
-            'image' => $imagePath,
+            'price'        => $request->price ?? 0,
+            'image'        => $imagePath,
         ]);
 
         return response()->json([
@@ -53,24 +69,25 @@ class ServiceController extends Controller
     }
 
     /**
-     * Update the specified service.
+     * تحديث خدمة
      */
     public function update(Request $request, $id)
     {
-        $service = Service::where('vendor_id', Auth::id())->findOrFail($id);
+        $vendor = $this->getVendor();
+        $service = Service::where('vendor_id', $vendor->id)->findOrFail($id);
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'name'         => 'required|string|max:255',
+            'description'  => 'required|string',
             'service_type' => 'required|string',
-            'price' => 'required|numeric',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'price'        => 'nullable|numeric|min:0',
+            'image_file'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
-        $data = $request->only(['name', 'description', 'service_type', 'price']);
+        $data = $request->only(['name', 'description', 'service_type']);
+        $data['price'] = $request->price ?? $service->price;
 
         if ($request->hasFile('image_file')) {
-            // Delete old image if exists
             if ($service->image) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $service->image));
             }
@@ -86,12 +103,13 @@ class ServiceController extends Controller
     }
 
     /**
-     * Remove the specified service.
+     * حذف خدمة
      */
     public function destroy($id)
     {
-        $service = Service::where('vendor_id', Auth::id())->findOrFail($id);
-        
+        $vendor = $this->getVendor();
+        $service = Service::where('vendor_id', $vendor->id)->findOrFail($id);
+
         if ($service->image) {
             Storage::disk('public')->delete(str_replace('/storage/', '', $service->image));
         }

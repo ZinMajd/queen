@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -17,20 +18,31 @@ class AuthController extends Controller
         $status = $request->role === 'مزود خدمة' ? 'pending' : 'active';
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => $request->phone,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'status' => $status,
+            'role'     => $request->role,
+            'status'   => $status,
         ]);
+
+        // إنشاء سجل Vendor إذا كان المستخدم مزود خدمة
+        if ($request->role === 'مزود خدمة') {
+            Vendor::create([
+                'user_id'       => $user->id,
+                'business_name' => $request->business_name ?? $request->name,
+                'service_type'  => $request->service_type ?? 'عام',
+                'description'   => $request->description,
+                'status'        => 'pending',
+            ]);
+        }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user,
+            'token_type'   => 'Bearer',
+            'user'         => $user->load('vendor'),
         ]);
     }
 
@@ -38,7 +50,7 @@ class AuthController extends Controller
     {
         try {
             $request->validate([
-                'email' => 'required|email',
+                'email'    => 'required|email',
                 'password' => 'required',
             ]);
 
@@ -66,8 +78,8 @@ class AuthController extends Controller
 
             return response()->json([
                 'access_token' => $token,
-                'token_type' => 'Bearer',
-                'user' => $user,
+                'token_type'   => 'Bearer',
+                'user'         => $user->load('vendor'),
             ]);
         } catch (ValidationException $e) {
             throw $e;
@@ -89,6 +101,6 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        return $request->user();
+        return $request->user()->load('vendor');
     }
 }

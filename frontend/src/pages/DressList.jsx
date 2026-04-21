@@ -133,9 +133,11 @@ const DressList = () => {
     // Status translation from Arabic UI values to DB values
     const statusMap = { 'متاح': 'available', 'محجوز': 'booked' };
     const targetStatus = statusMap[filters.status] || filters.status;
-    const matchesStatus = !filters.status || dress.status === targetStatus || 
+    const matchesStatus = !filters.status || 
+                         (filters.status === 'متاح' && dress.bookings_count === 0) ||
                          (filters.status === 'محجوز' && dress.bookings_count > 0) ||
-                         (filters.status === 'متاح' && dress.bookings_count === 0);
+                         (filters.status === 'للبيع' && dress.is_for_sale) ||
+                         (filters.status === 'للإيجار' && dress.is_for_rent);
 
     return matchesType && matchesSize && matchesStatus;
   }) : [];
@@ -310,8 +312,10 @@ const DressList = () => {
                 className="w-full bg-slate-100 rounded-xl py-3 px-4 outline-none border-2 border-transparent focus:bg-white focus:border-rose-500 transition-all font-semibold"
               >
                 <option value="">الكل</option>
-                <option value="متاح">متاح</option>
-                <option value="محجوز">محجوز</option>
+                <option value="متاح">متاح حالياً</option>
+                <option value="محجوز">محجوز حالياً</option>
+                <option value="للبيع">متاح للبيع</option>
+                <option value="للإيجار">متاح للإيجار</option>
               </select>
             </div>
 
@@ -385,25 +389,39 @@ const DressList = () => {
                     <p className="text-slate-500 text-sm leading-relaxed mb-8">
                       {dress.description}
                     </p>
-                    {dress.price && (
-                        <div className="flex items-center gap-2 mb-6">
-                            <span className="text-3xl font-black text-slate-900">{dress.price}</span>
-                            <span className="text-slate-400 font-bold text-sm">ر.س</span>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {dress.is_for_rent && (
+                        <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-[10px] font-black border border-blue-100">إيجار</span>
+                      )}
+                      {dress.is_for_sale && (
+                        <span className="bg-green-50 text-green-600 px-3 py-1 rounded-lg text-[10px] font-black border border-green-100">بيع</span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-1 mb-6">
+                      {dress.is_for_rent && (
+                        <div className="flex justify-between items-center text-sm font-bold">
+                           <span className="text-slate-400">سعر الإيجار:</span>
+                           <span className="text-blue-900">{dress.rent_price || 'واتساب'}</span>
                         </div>
-                    )}
-                    <div className="mt-auto pt-6 flex flex-col gap-3">
-                      <div className="flex justify-between items-center text-sm font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                         <span>نوع الفستان:</span>
-                         <span className="text-slate-900">{dress.type}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                      )}
+                      {dress.is_for_sale && (
+                        <div className="flex justify-between items-center text-sm font-bold">
+                           <span className="text-slate-400">سعر البيع:</span>
+                           <span className="text-green-900">{dress.sale_price || 'واتساب'}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-auto pt-4 flex flex-col gap-2">
+                      <div className="flex justify-between items-center text-[11px] font-bold text-slate-500">
                          <span>المقاس:</span>
                          <span className="text-slate-900">{dress.size}</span>
                       </div>
-                      <div className="flex justify-between items-center text-sm font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                      <div className="flex justify-between items-center text-[11px] font-bold text-slate-500">
                          <span>الحالة:</span>
                          <span className={dress.bookings_count > 0 ? 'text-rose-600' : 'text-green-600'}>
-                            {dress.bookings_count > 0 ? 'محجوز' : 'متاح'}
+                            {dress.bookings_count > 0 ? 'محجوز حالياً' : 'متاح'}
                          </span>
                       </div>
                     </div>

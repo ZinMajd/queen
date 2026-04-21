@@ -17,9 +17,15 @@ const MediaRenderer = ({ src, alt, className }) => {
   let fullSrc = src || '';
   
   if (src && !src.startsWith('http')) {
-    // Ensure leading slash
-    const path = src.startsWith('/') ? src : `/${src}`;
-    fullSrc = `${backendBase}${path}`;
+    // If it's a Vite asset (starts with /src or has a hash-like structure from build)
+    // we don't want to prefix it with backendBase
+    if (src.startsWith('/src') || src.startsWith('/assets/') || src.startsWith('data:')) {
+      fullSrc = src;
+    } else {
+      // Ensure leading slash for backend assets
+      const path = src.startsWith('/') ? src : `/${src}`;
+      fullSrc = `${backendBase}${path}`;
+    }
   }
 
   if (isVideo) {

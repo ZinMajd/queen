@@ -74,6 +74,10 @@ class DressController extends Controller
             'type' => 'nullable|string',
             'size' => 'nullable|string',
             'image' => 'nullable|image|max:10240', // 10MB limit
+            'is_for_sale' => 'boolean',
+            'is_for_rent' => 'boolean',
+            'sale_price' => 'nullable|string',
+            'rent_price' => 'nullable|string',
         ]);
 
         $imagePath = null;
@@ -93,6 +97,10 @@ class DressController extends Controller
             'size' => $request->size,
             'image' => $imagePath,
             'status' => 'available',
+            'is_for_sale' => $request->is_for_sale ?? false,
+            'is_for_rent' => $request->is_for_rent ?? true,
+            'sale_price' => $request->sale_price,
+            'rent_price' => $request->rent_price,
         ]);
 
         return response()->json([

@@ -30,14 +30,17 @@ class BookingController extends Controller
         $request->validate([
             'dress_id' => 'nullable|exists:dresses,id',
             'service_id' => 'nullable|exists:services,id',
-            'booking_date' => 'required|date|after_or_equal:today',
+            'type' => 'nullable|in:rent,sale',
+            'booking_date' => $request->type === 'sale' ? 'nullable|date' : 'required|date|after_or_equal:today',
             'delivery_method' => 'required|string',
             'delivery_address' => 'nullable|string',
             'payment_method' => 'required|string',
         ]);
+ 
+        $type = $request->input('type', 'rent');
 
-        // Double Booking Prevention Check
-        if ($request->dress_id) {
+        // Double Booking Prevention Check (Only for Rentals)
+        if ($request->dress_id && $type === 'rent') {
             $isBooked = Booking::where('dress_id', $request->dress_id)
                 ->where('booking_date', $request->booking_date)
                 ->where('status', '!=', 'cancelled')
@@ -49,11 +52,12 @@ class BookingController extends Controller
                 ], 422);
             }
         }
-
+ 
         $booking = Booking::create([
             'user_id' => Auth::id(),
             'dress_id' => $request->dress_id,
             'service_id' => $request->service_id,
+            'type' => $type,
             'booking_date' => $request->booking_date,
             'delivery_method' => $request->delivery_method,
             'delivery_address' => $request->delivery_address,

@@ -70,21 +70,6 @@ const WhatsAppPopup = ({ isOpen, onClose, message = '' }) => {
             <MessageCircle size={24} />
             فتح تطبيق واتساب
           </button>
-
-          <a
-            href={`tel:+${PHONE}`}
-            onClick={(e) => {
-               if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                 e.preventDefault();
-                 navigator.clipboard.writeText(`+${PHONE}`);
-                 alert(`أنت تتصفح من الكمبيوتر، تم نسخ رقم الهاتف: +${PHONE}`);
-               }
-            }}
-            className="w-full bg-white border-2 border-slate-200 hover:border-slate-900 text-slate-700 hover:text-slate-900 py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-3 active:scale-95"
-          >
-            <Phone size={20} />
-            اتصال هاتفي مباشر
-          </a>
         </div>
       </div>
     </div>

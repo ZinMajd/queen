@@ -144,7 +144,7 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
             {[
               { name: 'فساتين زفاف', icon: Scissors, desc: 'أحدث الصيحات العالمية', link: '/dresses' },
-              { name: 'كوافير وتجميل', icon: Stars, desc: 'إطلالة ملكية ساحرة', link: '/services' },
+              { name: 'كوافير', icon: Stars, desc: 'إطلالة ملكية ساحرة', link: '/services' },
               { name: 'تصوير احترافي', icon: Camera, desc: 'تخليد أجمل اللحظات', link: '/services' },
               { name: 'منسق حفلات', icon: MapPin, desc: 'فخامة التنفيذ والديكور', link: '/services' }
             ].map((service, index) => (

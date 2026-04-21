@@ -13,7 +13,12 @@ class VendorController extends Controller
         $query = Vendor::query();
 
         if ($request->has('category')) {
-            $query->where('category', $request->category);
+            $cat = $request->category;
+            if ($cat === 'كوافير') {
+                $query->whereIn('category', ['كوافير', 'تجميل ومكياج', 'كوافير ومكياج']);
+            } else {
+                $query->where('category', $cat);
+            }
         }
 
         if ($request->has('search')) {

@@ -82,9 +82,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
 
 // Vendor Routes
 Route::middleware(['auth:sanctum', 'vendor'])->prefix('vendor')->group(function () {
-    Route::get('/dashboard', function() {
-        return response()->json(['message' => 'Vendor Dashboard Data Placeholder']);
-    });
+    Route::get('/dashboard', [\App\Http\Controllers\Api\Vendor\BookingController::class, 'getStats']);
 
     // Service Management for Vendors
     Route::get('/services', [\App\Http\Controllers\Api\Vendor\ServiceController::class, 'index']);

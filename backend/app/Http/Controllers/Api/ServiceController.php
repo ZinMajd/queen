@@ -22,7 +22,12 @@ class ServiceController extends Controller
         }
 
         if ($request->has('service_type') && !empty($request->service_type)) {
-            $query->where('service_type', $request->service_type);
+            $type = $request->service_type;
+            if ($type === 'كوافير') {
+                $query->whereIn('service_type', ['كوافير', 'تجميل ومكياج', 'كوافير ومكياج']);
+            } else {
+                $query->where('service_type', $type);
+            }
         }
 
         if ($request->has('min_rating')) {

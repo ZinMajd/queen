@@ -29,7 +29,7 @@ class UserController extends Controller
             $query->where('status', $request->status);
         }
 
-        return response()->json($query->latest()->get());
+        return response()->json($query->with('vendor')->latest()->get());
     }
 
     /**
@@ -38,21 +38,32 @@ class UserController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:active,pending,blocked',
+            'status' => 'required|in:active,pending,blocked,rejected',
         ]);
 
         $user = User::findOrFail($id);
         $user->status = $request->status;
         $user->save();
 
-        // Trigger Notification to the Vendor/User
-        if ($user->role === 'مزود خدمة') {
-            $user->notify(new VendorStatusChanged($request->status));
+        // Sync with Vendor record if it exists
+        if ($user->role === 'مزود خدمة' && $user->vendor) {
+            $vendorStatus = $request->status;
+            // Map user status to vendor status if different (e.g., active -> approved)
+            if ($request->status === 'active') $vendorStatus = 'approved';
+            
+            $user->vendor->update(['status' => $vendorStatus]);
+            
+            // Trigger Notification to the Vendor
+            try {
+                $user->notify(new VendorStatusChanged($request->status));
+            } catch (\Exception $e) {
+                // Ignore notification failures
+            }
         }
 
         return response()->json([
             'message' => 'تم تحديث حالة المستخدم بنجاح.',
-            'user' => $user
+            'user' => $user->load('vendor')
         ]);
     }
 

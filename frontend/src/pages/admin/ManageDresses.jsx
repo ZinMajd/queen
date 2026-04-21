@@ -28,6 +28,10 @@ const ManageDresses = () => {
     description: '',
     size: '',
     type: '',
+    is_for_sale: false,
+    is_for_rent: true,
+    sale_price: '',
+    rent_price: '',
     image: null
   });
 
@@ -65,6 +69,10 @@ const ManageDresses = () => {
         description: dress.description,
         size: dress.size || '',
         type: dress.type || '',
+        is_for_sale: dress.is_for_sale == 1 || dress.is_for_sale === true,
+        is_for_rent: dress.is_for_rent == 1 || dress.is_for_rent === true,
+        sale_price: dress.sale_price || '',
+        rent_price: dress.rent_price || '',
         image: null
       });
     } else {
@@ -75,6 +83,10 @@ const ManageDresses = () => {
         description: '',
         size: '',
         type: '',
+        is_for_sale: false,
+        is_for_rent: true,
+        sale_price: '',
+        rent_price: '',
         image: null
       });
     }
@@ -89,6 +101,10 @@ const ManageDresses = () => {
     data.append('description', formData.description || '');
     data.append('size', formData.size || 'M');
     data.append('type', formData.type || 'زفاف');
+    data.append('is_for_sale', formData.is_for_sale ? 1 : 0);
+    data.append('is_for_rent', formData.is_for_rent ? 1 : 0);
+    data.append('sale_price', formData.sale_price || '');
+    data.append('rent_price', formData.rent_price || '');
     if (formData.image) data.append('image', formData.image);
 
     if (editingDress) data.append('_method', 'PUT');
@@ -190,15 +206,19 @@ const ManageDresses = () => {
                     <div className="text-sm font-bold text-slate-600">{dress.size} | {dress.type}</div>
                   </td>
                   <td className="px-8 py-6 text-sm font-bold">
-                    {dress.bookings_count > 0 ? (
-                      <span className="text-rose-600 flex items-center gap-2">
-                        <X size={16} /> محجوز
-                      </span>
-                    ) : (
-                      <span className="text-green-500 flex items-center gap-2">
-                        <Check size={16} /> متاح
-                      </span>
-                    )}
+                    <div className="flex flex-col gap-1">
+                      {dress.is_for_rent && (
+                        <span className="text-blue-600 flex items-center gap-2">
+                          {dress.bookings_count > 0 ? <X size={14} /> : <Check size={14} />} 
+                          إيجار {dress.rent_price && `(${dress.rent_price})`}
+                        </span>
+                      )}
+                      {dress.is_for_sale && (
+                        <span className="text-green-600 flex items-center gap-2">
+                          <Check size={14} /> بيع {dress.sale_price && `(${dress.sale_price})`}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-8 py-6">
                     <div className="flex items-center justify-center gap-2">
@@ -237,7 +257,49 @@ const ManageDresses = () => {
                   <option value="حناء">حناء</option>
                 </select>
               </div>
-              <textarea placeholder="الوصف" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 outline-none focus:border-rose-500 font-bold h-32 resize-none"></textarea>
+              <textarea placeholder="الوصف" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 outline-none focus:border-rose-500 font-bold h-24 resize-none"></textarea>
+              
+              <div className="grid grid-cols-2 gap-6 p-4 bg-slate-50 rounded-3xl border-2 border-slate-100">
+                <div className="flex items-center gap-3">
+                  <input 
+                    type="checkbox" 
+                    id="is_for_rent"
+                    checked={formData.is_for_rent} 
+                    onChange={(e) => setFormData({...formData, is_for_rent: e.target.checked})}
+                    className="w-5 h-5 accent-rose-600"
+                  />
+                  <label htmlFor="is_for_rent" className="font-bold text-slate-700">متاح للإيجار</label>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input 
+                    type="checkbox" 
+                    id="is_for_sale"
+                    checked={formData.is_for_sale} 
+                    onChange={(e) => setFormData({...formData, is_for_sale: e.target.checked})}
+                    className="w-5 h-5 accent-rose-600"
+                  />
+                  <label htmlFor="is_for_sale" className="font-bold text-slate-700">متاح للبيع</label>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <input 
+                  type="text" 
+                  placeholder="سعر الإيجار (مثلاً: 500$)" 
+                  value={formData.rent_price} 
+                  disabled={!formData.is_for_rent}
+                  onChange={(e) => setFormData({...formData, rent_price: e.target.value})} 
+                  className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 outline-none focus:border-rose-500 font-bold disabled:opacity-50" 
+                />
+                <input 
+                  type="text" 
+                  placeholder="سعر البيع (مثلاً: 2000$)" 
+                  value={formData.sale_price} 
+                  disabled={!formData.is_for_sale}
+                  onChange={(e) => setFormData({...formData, sale_price: e.target.value})} 
+                  className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 outline-none focus:border-rose-500 font-bold disabled:opacity-50" 
+                />
+              </div>
               <div className="border-2 border-dashed border-slate-200 rounded-3xl p-8 text-center hover:border-rose-300 transition-all cursor-pointer relative">
                 <input type="file" accept="image/*" onChange={(e) => setFormData({...formData, image: e.target.files[0]})} className="absolute inset-0 opacity-0 cursor-pointer" />
                 <ImageIcon className="mx-auto text-slate-300 mb-2" size={32} />

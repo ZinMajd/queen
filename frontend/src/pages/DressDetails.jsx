@@ -25,6 +25,7 @@ const DressDetails = () => {
   const [dress, setDress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bookingType, setBookingType] = useState('rent');
   const [whatsappOpen, setWhatsappOpen] = useState(false);
   const [whatsappMsg, setWhatsappMsg] = useState('');
 
@@ -142,35 +143,62 @@ const DressDetails = () => {
               </div>
             </div>
 
+            {/* Price Display */}
+            <div className="flex gap-4 mb-8">
+              {dress.is_for_rent && (
+                <div className="flex-1 bg-blue-50 border border-blue-100 p-6 rounded-3xl">
+                   <p className="text-blue-400 text-xs font-bold uppercase mb-1">سعر الإيجار</p>
+                   <p className="text-blue-900 font-black text-2xl">{dress.rent_price || 'يتحدد في الواتساب'}</p>
+                </div>
+              )}
+              {dress.is_for_sale && (
+                <div className="flex-1 bg-green-50 border border-green-100 p-6 rounded-3xl">
+                   <p className="text-green-400 text-xs font-bold uppercase mb-1">سعر البيع</p>
+                   <p className="text-green-900 font-black text-2xl">{dress.sale_price || 'يتحدد في الواتساب'}</p>
+                </div>
+              )}
+            </div>
+
             {/* Actions */}
             <div className="sticky bottom-6 lg:relative lg:bottom-0 space-y-4">
-              <button 
-                onClick={() => setIsModalOpen(true)}
-                disabled={dress.bookings_count > 0}
-                className={`w-full py-6 rounded-4xl text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 active:scale-95 group ${
-                  dress.bookings_count > 0 
-                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                  : 'bg-slate-900 hover:bg-rose-600 text-white hover:-translate-y-1'
-                }`}
-              >
-                <Calendar size={24} className={dress.bookings_count > 0 ? '' : 'group-hover:rotate-12 transition-transform'} />
-                {dress.bookings_count > 0 ? 'هذا الفستان محجوز حالياً' : 'حجز موعد'}
-              </button>
-              
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => { setWhatsappMsg(`استفسار عن فستان: ${dress.name}`); setWhatsappOpen(true); }}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-4xl font-bold transition-all flex items-center justify-center gap-3 active:scale-95"
-                >
-                  <MessageCircle size={20} /> استفسار واتساب
-                </button>
-
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {dress.is_for_rent && (
+                  <button 
+                    onClick={() => { setBookingType('rent'); setIsModalOpen(true); }}
+                    disabled={dress.bookings_count > 0}
+                    className={`flex-1 py-6 rounded-4xl text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 active:scale-95 group ${
+                      dress.bookings_count > 0 
+                      ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                      : 'bg-slate-900 hover:bg-rose-600 text-white hover:-translate-y-1'
+                    }`}
+                  >
+                    <Calendar size={24} className={dress.bookings_count > 0 ? '' : 'group-hover:rotate-12 transition-transform'} />
+                    {dress.bookings_count > 0 ? 'محجوز حالياً' : 'حجز للإيجار'}
+                  </button>
+                )}
+                
+                {dress.is_for_sale && (
+                  <button 
+                    onClick={() => { setBookingType('sale'); setIsModalOpen(true); }}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-6 rounded-4xl text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 active:scale-95 hover:-translate-y-1"
+                  >
+                    <ShoppingBag size={24} /> شراء الفستان
+                  </button>
+                )}
               </div>
+              
+              <button 
+                onClick={() => { setWhatsappMsg(`استفسار عن فستان: ${dress.name}`); setWhatsappOpen(true); }}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-4 rounded-3xl font-bold transition-all flex items-center justify-center gap-3 active:scale-95"
+              >
+                <MessageCircle size={20} /> استفسار عام عبر واتساب
+              </button>
             </div>
 
             {isModalOpen && (
               <BookingModal 
                 dress={dress} 
+                type={bookingType}
                 onClose={() => setIsModalOpen(false)} 
               />
             )}

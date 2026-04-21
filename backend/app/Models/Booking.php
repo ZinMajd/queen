@@ -10,6 +10,7 @@ class Booking extends Model
         'user_id',
         'dress_id',
         'service_id',
+        'type',
         'booking_date',
         'delivery_method',
         'delivery_address',

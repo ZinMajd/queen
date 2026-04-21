@@ -22,7 +22,7 @@ class ServiceSeeder extends Seeder
         Service::create([
             'name' => 'كوافير (تسريحات شعر / مكياج)',
             'description' => 'باقات متكاملة تشمل أحدث تسريحات الشعر العصرية والمكياج السينمائي والملكي بأيدي خبيرات كوافير محترفات.',
-            'service_type' => 'تجميل ومكياج',
+            'service_type' => 'كوافير',
             'price' => 200.00,
             'image' => 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
         ]);

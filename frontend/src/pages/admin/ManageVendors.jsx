@@ -122,8 +122,16 @@ const ManageVendors = () => {
                   </span>
                 </div>
 
-                <h3 className="text-xl font-black text-slate-900 mb-2">{vendor.name}</h3>
-                <p className="text-slate-500 text-sm font-medium mb-6 line-clamp-2">مزود خدمة انضم بتاريخ {new Date(vendor.created_at).toLocaleDateString('ar-YE')}</p>
+                <h3 className="text-xl font-black text-slate-900 mb-1">{vendor.vendor?.business_name || vendor.name}</h3>
+                <div className="flex items-center gap-2 mb-4">
+                   <span className="bg-rose-50 text-rose-600 px-3 py-1 rounded-lg text-[10px] font-black italic border border-rose-100">
+                     {vendor.vendor?.service_type || 'مزود عام'}
+                   </span>
+                </div>
+                
+                <p className="text-slate-500 text-sm font-medium mb-6 line-clamp-2">
+                  {vendor.vendor?.description || 'لا يوجد وصف متاح لهذا المزود حالياً.'}
+                </p>
 
                 <div className="space-y-3 mb-8">
                   <div className="flex items-center gap-3 text-slate-400">

@@ -26,10 +26,10 @@ const VendorServices = () => {
     name: '',
     description: '',
     service_type: '',
-    price: '',
     image_file: null
   });
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -59,7 +59,6 @@ const VendorServices = () => {
         name: service.name,
         description: service.description,
         service_type: service.service_type,
-        price: service.price,
         image_file: null
       });
     } else {
@@ -69,7 +68,6 @@ const VendorServices = () => {
         name: '',
         description: '',
         service_type: '',
-        price: '',
         image_file: null
       });
     }
@@ -86,7 +84,6 @@ const VendorServices = () => {
     data.append('name', formData.name);
     data.append('description', formData.description);
     data.append('service_type', formData.service_type);
-    data.append('price', formData.price);
     if (formData.image_file) {
       data.append('image_file', formData.image_file);
     }
@@ -99,9 +96,14 @@ const VendorServices = () => {
 
     try {
       await api.post(url, data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(percentCompleted);
+        }
       });
       setModalOpen(false);
+      setUploadProgress(0);
       fetchServices();
     } catch (err) {
       console.error('Submit error:', err);
@@ -197,8 +199,7 @@ const VendorServices = () => {
                 <div className="mt-auto flex justify-between items-center bg-slate-50 p-4 rounded-3xl border border-slate-100 shadow-inner">
                    <div className="flex items-center gap-2">
                       <DollarSign size={20} className="text-rose-500" />
-                      <span className="text-2xl font-black text-slate-900 tracking-tighter">{service.price}</span>
-                      <span className="text-xs text-slate-400 font-bold uppercase tracking-widest">ريال</span>
+                      <span className="text-lg font-black text-slate-900 tracking-tight">السعر حسب الاتفاق</span>
                    </div>
                    <div className="text-xs text-slate-400 font-black uppercase tracking-[0.2em]">نشط</div>
                 </div>
@@ -212,18 +213,18 @@ const VendorServices = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-100 flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setModalOpen(false)}></div>
-          <div className="relative bg-white w-full max-w-2xl rounded-5xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
-            <div className="bg-rose-600 p-8 text-white flex justify-between items-center">
+          <div className="relative bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 flex flex-col max-h-[90vh]">
+            <div className="bg-rose-600 p-6 text-white flex justify-between items-center shrink-0">
                <div>
-                  <h2 className="text-3xl font-black">{isEditing ? 'تعديل الخدمة' : 'إضافة خدمة جديدة'}</h2>
-                  <p className="text-rose-100 font-medium opacity-80">املئي البيانات التالية بدقة</p>
+                  <h2 className="text-2xl font-black">{isEditing ? 'تعديل الخدمة' : 'إضافة خدمة جديدة'}</h2>
+                  <p className="text-rose-100 text-sm font-medium opacity-80">املئي البيانات التالية بدقة</p>
                </div>
                <button onClick={() => setModalOpen(false)} className="bg-white/20 hover:bg-white/30 p-2 rounded-xl">
                  <X size={24} />
                </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-8 lg:p-12 space-y-6">
+            <form onSubmit={handleSubmit} className="p-8 overflow-y-auto custom-scrollbar space-y-6">
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="text-right">
                     <label className="block text-slate-700 font-bold mb-2 mr-2">اسم الخدمة</label>
@@ -272,38 +273,23 @@ const VendorServices = () => {
                 />
                </div>
 
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="text-right">
-                    <label className="block text-slate-700 font-bold mb-2 mr-2">السعر (بالريال)</label>
-                    <div className="relative">
-                      <input 
-                        type="number" 
-                        required
-                        value={formData.price}
-                        onChange={(e) => setFormData({...formData, price: e.target.value})}
-                        className="w-full bg-slate-100 border-2 border-transparent focus:border-rose-500 focus:bg-white rounded-2xl py-4 pr-12 pl-4 outline-none transition-all font-bold text-slate-800"
-                      />
-                      <DollarSign className="absolute right-4 top-4 text-slate-400" size={24} />
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <label className="block text-slate-700 font-bold mb-2 mr-2">صورة الخدمة</label>
-                    <div className="relative">
-                      <input 
-                        type="file" 
-                        onChange={(e) => setFormData({...formData, image_file: e.target.files[0]})}
-                        className="hidden"
-                        id="image-upload"
-                      />
-                      <label 
-                        htmlFor="image-upload"
-                        className="w-full bg-slate-100 border-2 border-dashed border-slate-300 hover:border-rose-500 focus:bg-white rounded-2xl py-4 pr-12 pl-4 transition-all font-bold text-slate-600 block cursor-pointer"
-                      >
-                         {formData.image_file ? formData.image_file.name : 'اختر صورة...'}
-                      </label>
-                      <ImageIcon className="absolute right-4 top-4 text-slate-400" size={24} />
-                    </div>
-                  </div>
+               <div className="text-right">
+                <label className="block text-slate-700 font-bold mb-2 mr-2">صورة الخدمة</label>
+                <div className="relative">
+                  <input 
+                    type="file" 
+                    onChange={(e) => setFormData({...formData, image_file: e.target.files[0]})}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <label 
+                    htmlFor="image-upload"
+                    className="w-full bg-slate-100 border-2 border-dashed border-slate-300 hover:border-rose-500 focus:bg-white rounded-2xl py-4 pr-12 pl-4 transition-all font-bold text-slate-600 block cursor-pointer"
+                  >
+                     {formData.image_file ? formData.image_file.name : 'اختر صورة...'}
+                  </label>
+                  <ImageIcon className="absolute right-4 top-4 text-slate-400" size={24} />
+                </div>
                </div>
 
                {error && (
@@ -319,7 +305,10 @@ const VendorServices = () => {
                   className="w-full bg-slate-900 hover:bg-rose-600 text-white py-6 rounded-3xl text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 hover:-translate-y-1 active:scale-95 disabled:opacity-50"
                >
                   {submitLoading ? (
-                    <Loader2 className="animate-spin" size={24} />
+                    <div className="flex flex-col items-center gap-2">
+                       <Loader2 className="animate-spin" size={24} />
+                       {uploadProgress > 0 && <span className="text-sm font-bold">جاري الرفع: {uploadProgress}%</span>}
+                    </div>
                   ) : (
                     <>
                       {isEditing ? 'تحديث الخدمة' : 'إضافة الخدمة الآن'}
@@ -327,6 +316,15 @@ const VendorServices = () => {
                     </>
                   )}
                </button>
+
+               {submitLoading && uploadProgress > 0 && (
+                 <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden mt-4 shadow-inner">
+                   <div 
+                     className="bg-[#25D366] h-full transition-all duration-300" 
+                     style={{ width: `${uploadProgress}%` }}
+                   />
+                 </div>
+               )}
             </form>
           </div>
         </div>

@@ -17,13 +17,14 @@ import {
 } from 'lucide-react';
 import api from '../api/api';
 
-const BookingModal = ({ isOpen, onClose, dress, service }) => {
+const BookingModal = ({ isOpen, onClose, dress, service, type = 'rent' }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     booking_date: '',
     delivery_method: 'pickup',
     delivery_address: '',
     payment_method: 'cash',
+    type: type
   });
   const [loading, setLoading] = useState(false);
   const [bookedDates, setBookedDates] = useState([]);
@@ -46,9 +47,15 @@ const BookingModal = ({ isOpen, onClose, dress, service }) => {
     };
 
     if (isOpen && dress) {
-      fetchBookedDates();
+      if (type === 'sale') {
+          setFormData(prev => ({ ...prev, type: 'sale' }));
+          setStep(2);
+      } else {
+          setFormData(prev => ({ ...prev, type: 'rent' }));
+          fetchBookedDates();
+      }
     }
-  }, [isOpen, dress]);
+  }, [isOpen, dress, type]);
 
   const getDaysInMonth = (year, month) => {
     return new Date(year, month + 1, 0).getDate();
@@ -282,13 +289,6 @@ const BookingModal = ({ isOpen, onClose, dress, service }) => {
                 <MessageCircle size={22} />
                 تأكيد الحجز عبر واتساب
               </a>
-              <a
-                href="tel:+967777512939"
-                className="flex items-center justify-center gap-3 bg-slate-100 hover:bg-slate-200 text-slate-800 py-4 rounded-2xl font-black transition-all active:scale-95"
-              >
-                <Phone size={20} />
-                اتصال هاتفي مباشر
-              </a>
             </div>
           </div>
         ) : (
@@ -296,7 +296,7 @@ const BookingModal = ({ isOpen, onClose, dress, service }) => {
             <div className="bg-slate-900 p-4 text-white">
               <div className="flex justify-between items-start">
                 <div className="flex-2 text-right">
-                  <h2 className="text-xl font-black mb-1">تأكيد الحجز</h2>
+                  <h2 className="text-xl font-black mb-1">{formData.type === 'sale' ? 'طلب شراء فستان' : 'تأكيد الحجز'}</h2>
                   <p className="text-slate-400 text-xs font-medium">الخطوة {step} من 3</p>
                 </div>
                 <button 
@@ -321,7 +321,7 @@ const BookingModal = ({ isOpen, onClose, dress, service }) => {
                 </div>
                 <div>
                   <h4 className="font-black text-slate-800 text-sm">
-                    {step === 1 ? 'متى المناسبة؟' : step === 2 ? 'كيف نصل إليكِ؟' : 'كيف تودين الدفع؟'}
+                    {step === 1 ? 'متى المناسبة؟' : step === 2 ? (formData.type === 'sale' ? 'كيف نرسل لكِ الفستان؟' : 'كيف نصل إليكِ؟') : 'كيف تودين الدفع؟'}
                   </h4>
                   <p className="text-[10px] text-slate-400 font-bold mt-0.5">يرجى ملء البيانات بدقة</p>
                 </div>

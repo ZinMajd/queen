@@ -13,7 +13,16 @@ class Dress extends Model
         'size',
         'type',
         'image',
-        'status'
+        'status',
+        'is_for_sale',
+        'is_for_rent',
+        'sale_price',
+        'rent_price'
+    ];
+ 
+    protected $casts = [
+        'is_for_sale' => 'boolean',
+        'is_for_rent' => 'boolean',
     ];
 
     public function favorites()

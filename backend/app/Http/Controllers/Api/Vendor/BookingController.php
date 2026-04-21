@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\BookingStatusChanged;
@@ -11,21 +12,36 @@ use App\Notifications\BookingStatusChanged;
 class BookingController extends Controller
 {
     /**
-     * Display a listing of bookings for the vendor's services.
+     * الحصول على سجل المزود للمستخدم المسجّل
+     */
+    private function getVendor()
+    {
+        $vendor = Auth::user()->vendor;
+        if (!$vendor) {
+            abort(404, 'لم يتم العثور على حساب المزود.');
+        }
+        return $vendor;
+    }
+
+    /**
+     * عرض حجوزات خدمات المزود
      */
     public function index()
     {
+        $vendor = $this->getVendor();
+
         $bookings = Booking::with(['user', 'service'])
-            ->whereHas('service', function ($query) {
-                $query->where('vendor_id', Auth::id());
+            ->whereHas('service', function ($query) use ($vendor) {
+                $query->where('vendor_id', $vendor->id);
             })
             ->latest()
             ->get();
 
-        // Privacy Logic: Mask phone if not confirmed
+        // إخفاء رقم الهاتف للحجوزات المعلقة (حماية الخصوصية)
         $bookings->map(function ($booking) {
-            if ($booking->status === 'pending') {
-                $booking->user->phone = substr($booking->user->phone, 0, 2) . 'XXXXXXX';
+            if ($booking->status === 'pending' && $booking->user) {
+                $phone = $booking->user->phone ?? '';
+                $booking->user->phone = substr($phone, 0, 2) . 'XXXXXXX';
             }
             return $booking;
         });
@@ -34,7 +50,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Update booking status (Confirm/Cancel).
+     * تحديث حالة الحجز (قبول / رفض / إكمال)
      */
     public function updateStatus(Request $request, $id)
     {
@@ -42,19 +58,24 @@ class BookingController extends Controller
             'status' => 'required|in:confirmed,cancelled,completed',
         ]);
 
-        $booking = Booking::whereHas('service', function ($query) {
-            $query->where('vendor_id', Auth::id());
+        $vendor = $this->getVendor();
+
+        $booking = Booking::whereHas('service', function ($query) use ($vendor) {
+            $query->where('vendor_id', $vendor->id);
         })->findOrFail($id);
 
         $booking->status = $request->status;
         $booking->save();
 
-        // Trigger Notification to the Customer
+        // إرسال إشعار للعميل
         if ($booking->user) {
-            $booking->user->notify(new BookingStatusChanged($booking, $request->status));
+            try {
+                $booking->user->notify(new BookingStatusChanged($booking, $request->status));
+            } catch (\Exception $e) {
+                // لا نوقف العملية إذا فشل الإشعار
+            }
         }
 
-        // Refresh to get full user data if confirmed
         $booking->load(['user', 'service']);
 
         return response()->json([
@@ -62,4 +83,30 @@ class BookingController extends Controller
             'booking' => $booking
         ]);
     }
+
+    /**
+     * Get vendor dashboard statistics.
+     */
+    public function getStats()
+    {
+        $vendor = $this->getVendor();
+        
+        $totalServices = \App\Models\Service::where('vendor_id', $vendor->id)->count();
+        
+        $bookingsQuery = Booking::whereHas('service', function ($query) use ($vendor) {
+            $query->where('vendor_id', $vendor->id);
+        });
+
+        $totalBookings = (clone $bookingsQuery)->count();
+        $pendingBookings = (clone $bookingsQuery)->where('status', 'pending')->count();
+        $completedBookings = (clone $bookingsQuery)->where('status', 'completed')->count();
+
+        return response()->json([
+            'totalServices' => $totalServices,
+            'totalBookings' => $totalBookings,
+            'pendingBookings' => $pendingBookings,
+            'completedBookings' => $completedBookings,
+        ]);
+    }
 }
+

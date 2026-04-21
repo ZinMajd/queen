@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User, Phone, Loader2, Heart, AlertCircle } from 'lucide-react';
+import { Mail, Lock, User, Phone, Loader2, Heart, AlertCircle, Store, Sparkles } from 'lucide-react';
 import { register as registerApi } from '../api/api';
 
 const Register = () => {
@@ -178,6 +178,59 @@ const Register = () => {
                 <Lock className="absolute right-4 top-3.5 text-slate-400" size={22} />
               </div>
             </div>
+
+            {formData.role === 'مزود خدمة' && (
+              <div className="space-y-5 animate-in slide-in-from-top-4 duration-500">
+                <div className="text-right">
+                  <label className="block text-slate-700 font-bold mb-1.5 mr-2 text-sm">اسم النشاط التجاري (المحل / المركز)</label>
+                  <div className="relative">
+                    <input 
+                      type="text" 
+                      name="business_name"
+                      required
+                      value={formData.business_name || ''}
+                      onChange={handleChange}
+                      placeholder="مثلاً: صالون الملكة للتجميل"
+                      className="w-full bg-slate-50 border-2 border-rose-100 focus:border-rose-500 focus:bg-white rounded-2xl py-3.5 pr-12 pl-4 outline-none transition-all font-bold text-slate-800"
+                    />
+                    <Store className="absolute right-4 top-3.5 text-rose-400" size={22} />
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <label className="block text-slate-700 font-bold mb-1.5 mr-2 text-sm">نوع الخدمة</label>
+                  <div className="relative">
+                    <select 
+                      name="service_type"
+                      required
+                      value={formData.service_type || ''}
+                      onChange={handleChange}
+                      className="w-full bg-slate-50 border-2 border-rose-100 focus:border-rose-500 focus:bg-white rounded-2xl py-3.5 pr-12 pl-4 outline-none transition-all font-bold text-slate-800 appearance-none cursor-pointer"
+                    >
+                      <option value="">اختاري نوع الخدمة...</option>
+                      <option value="كوافير">كوافير</option>
+                      <option value="تصوير فوتوغرافي">تصوير فوتوغرافي</option>
+                      <option value="منسق حفلات">منسق حفلات</option>
+                      <option value="خدمات أخرى">خدمات أخرى</option>
+                    </select>
+                    <div className="absolute right-4 top-3.5 text-rose-400 pointer-events-none">
+                      <Sparkles size={22} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <label className="block text-slate-700 font-bold mb-1.5 mr-2 text-sm">وصف بسيط عن خدماتكِ</label>
+                  <textarea 
+                    name="description"
+                    value={formData.description || ''}
+                    onChange={handleChange}
+                    placeholder="اكتبي نبذة تعريفية للعرائس..."
+                    className="w-full bg-slate-50 border-2 border-rose-100 focus:border-rose-500 focus:bg-white rounded-2xl py-3.5 pr-4 pl-4 outline-none transition-all font-bold text-slate-800 min-h-[100px]"
+                  />
+                </div>
+              </div>
+            )}
 
             {error && (
               <div className="bg-rose-50 text-rose-600 p-4 rounded-2xl flex items-center gap-3 text-xs font-bold border border-rose-100 text-right">
