@@ -17,9 +17,9 @@ Route::get('/', function () {
         }
     }
 
-    // Serve the frontend index.html
-    if (file_exists(public_path('index.html'))) {
-        return file_get_contents(public_path('index.html'));
+    // Serve the frontend app.html
+    if (file_exists(public_path('app.html'))) {
+        return file_get_contents(public_path('app.html'));
     }
 
     return response()->json([
@@ -29,10 +29,10 @@ Route::get('/', function () {
     ]);
 });
 
-// SPA Routing: Send all other non-API requests to index.html
+// SPA Routing: Send all other non-API requests to app.html
 Route::get('/{any}', function () {
-    if (file_exists(public_path('index.html'))) {
-        return file_get_contents(public_path('index.html'));
+    if (file_exists(public_path('app.html'))) {
+        return file_get_contents(public_path('app.html'));
     }
     return response()->json(['message' => 'Frontend not built yet'], 404);
 })->where('any', '^(?!api|init-fix|storage).*$');
