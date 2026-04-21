@@ -1,7 +1,10 @@
 {
   "name": "queen",
   "version": "1.0.0",
+  "description": "Queen Wedding Platform",
   "private": true,
+  "author": "zinmajd",
+  "license": "MIT",
   "workspaces": [
     "frontend",
     "backend"
