@@ -1,18 +1,22 @@
 {
   "version": 2,
+  "functions": {
+    "backend/api/index.php": {
+      "runtime": "vercel-php@0.7.1"
+    }
+  },
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "backend/public/index.php"
+      "dest": "backend/api/index.php"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "backend/public/assets/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/$1",
-      "check": true
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/index.html"
+      "dest": "backend/api/index.php"
     }
   ]
 }
