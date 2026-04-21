@@ -25,8 +25,8 @@ Route::get('/', function () {
     }
 
     return response()->json([
-        'message' => 'Queen Wedding API is running - VERSION 2.0.0',
-        'version' => '2.0.0',
+        'message' => 'Queen Wedding API is running - VERSION 3.0.0',
+        'version' => '3.0.0',
         'status' => 'healthy'
     ]);
 });

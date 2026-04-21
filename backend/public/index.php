@@ -16,8 +16,8 @@ require __DIR__.'/../vendor/autoload.php';
 // Bootstrap Laravel and handle the request...
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-// EMERGENCY DB INIT
-if (isset($_GET['init'])) {
+// EMERGENCY DB INIT - Moved up for Vercel
+if (isset($_GET['init']) || str_contains($_SERVER['REQUEST_URI'] ?? '', 'init=')) {
     try {
         echo "<h3>Queen DB Initialization</h3>";
         echo "Running migrations... ";
