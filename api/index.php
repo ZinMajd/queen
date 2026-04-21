@@ -1,6 +1,7 @@
 <?php
 // EMERGENCY DB INIT - Failsafe before Laravel
-if (isset($_GET['init'])) {
+$uri = $_SERVER['REQUEST_URI'] ?? '';
+if (isset($_GET['init']) || str_contains($uri, 'init-db')) {
     require __DIR__ . '/../backend/vendor/autoload.php';
     $app = require_once __DIR__ . '/../backend/bootstrap/app.php';
     $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
