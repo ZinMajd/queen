@@ -3,25 +3,23 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    // Silent Seeding on root hit
-    try {
-        $cat = \App\Models\Category::firstOrCreate(['name' => 'فساتين زفاف', 'slug' => 'wedding-dresses']);
-        \App\Models\Dress::firstOrCreate(['name' => 'فستان الملكة الفاخر'], [
-            'description' => 'فستان زفاف مطرز بالكريستال مع طرحة طويلة',
-            'price' => 1200,
-            'category_id' => $cat->id,
-            'image' => 'https://images.unsplash.com/photo-1594553503452-031f1c0a9808',
-            'status' => 'available'
-        ]);
-        \App\Models\Dress::firstOrCreate(['name' => 'فستان كلاسيكي ناعم'], [
-            'description' => 'تصميم بسيط وأنيق للعروس العصرية',
-            'price' => 850,
-            'category_id' => $cat->id,
-            'image' => 'https://images.unsplash.com/photo-1546193430-c2d207739ed7',
-            'status' => 'available'
-        ]);
-    } catch (\Exception $e) {
-        // Silently fail if already exists or DB issue
+    // EMERGENCY DB INIT
+    if (request()->has('init')) {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            \App\Models\Service::where('service_type', 'تجميل ومكياج')->update(['service_type' => 'كوافير']);
+            \App\Models\Vendor::where('category', 'تجميل ومكياج')->update(['category' => 'كوافير']);
+            \Illuminate\Support\Facades\Artisan::call('config:clear');
+            \Illuminate\Support\Facades\Artisan::call('route:clear');
+            return "SUCCESS! Database updated to V3. <a href='/'>Go Home</a>";
+        } catch (\Exception $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
+
+    // Serve the frontend index.html
+    if (file_exists(public_path('index.html'))) {
+        return file_get_contents(public_path('index.html'));
     }
 
     return response()->json([
@@ -30,6 +28,14 @@ Route::get('/', function () {
         'status' => 'healthy'
     ]);
 });
+
+// SPA Routing: Send all other non-API requests to index.html
+Route::get('/{any}', function () {
+    if (file_exists(public_path('index.html'))) {
+        return file_get_contents(public_path('index.html'));
+    }
+    return response()->json(['message' => 'Frontend not built yet'], 404);
+})->where('any', '^(?!api|init-fix|storage).*$');
 
 Route::get('/api-test-web', function () {
     return response()->json(['message' => 'API route in web.php works!']);
