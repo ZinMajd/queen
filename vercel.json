@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "_comment": "Forcing Vercel refresh V5",
+  "_comment": "FINAL STABLE UPDATE V100",
   "functions": {
     "backend/public/index.php": {
       "runtime": "vercel-php@0.7.1"
