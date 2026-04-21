@@ -4,16 +4,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // EMERGENCY DB INIT
-    if (request()->has('init')) {
+    if (isset($_GET['init'])) {
         try {
             \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
             \App\Models\Service::where('service_type', 'تجميل ومكياج')->update(['service_type' => 'كوافير']);
             \App\Models\Vendor::where('category', 'تجميل ومكياج')->update(['category' => 'كوافير']);
             \Illuminate\Support\Facades\Artisan::call('config:clear');
             \Illuminate\Support\Facades\Artisan::call('route:clear');
-            return "SUCCESS! Database updated to V3. <a href='/'>Go Home</a>";
+            return "<h3>SUCCESS! Database updated to V4.</h3> <a href='/'>Click here to return to Home</a>";
         } catch (\Exception $e) {
-            return "Error: " . $e->getMessage();
+            return "Error during initialization: " . $e->getMessage();
         }
     }
 

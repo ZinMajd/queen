@@ -51,7 +51,7 @@ const Home = () => {
         <div className="text-4xl font-black text-black drop-shadow-sm cursor-pointer tracking-tighter" onClick={() => navigate('/')}>الملكة</div>
         
         <nav className="hidden lg:flex items-center gap-10 text-black/80 font-bold text-sm uppercase tracking-widest">
-          <button onClick={() => navigate('/')} className="cursor-pointer hover:text-white transition-colors">الرئيسية V3</button>
+          <button onClick={() => navigate('/')} className="cursor-pointer hover:text-white transition-colors">الرئيسية</button>
           <button onClick={() => navigate('/dresses')} className="cursor-pointer hover:text-white transition-colors">الفساتين</button>
           <button onClick={() => navigate('/services')} className="cursor-pointer hover:text-white transition-colors">الخدمات</button>
           <button onClick={() => navigate('/vendors')} className="cursor-pointer hover:text-white transition-colors">مزودينا</button>
