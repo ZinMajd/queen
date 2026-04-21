@@ -43,14 +43,24 @@ class DressController extends Controller
             });
         }
 
-        $query->withCount('favorites');
+        $query->withCount(['favorites', 'bookings' => function($q) {
+            $q->whereIn('status', ['confirmed', 'completed']);
+        }]);
+
+        if ($request->has('all')) {
+            return response()->json([
+                'data' => $query->with('category')->get()
+            ]);
+        }
 
         return response()->json($query->with('category')->paginate(12));
     }
 
     public function show($id)
     {
-        $dress = Dress::with('category')->withCount('favorites')->findOrFail($id);
+        $dress = Dress::with('category')->withCount(['favorites', 'bookings' => function($q) {
+            $q->whereIn('status', ['confirmed', 'completed']);
+        }])->findOrFail($id);
         return response()->json($dress);
     }
 
@@ -58,12 +68,12 @@ class DressController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'type' => 'required|string',
-            'size' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'description' => 'nullable|string',
+            'price' => 'nullable|numeric',
+            'category_id' => 'required',
+            'type' => 'nullable|string',
+            'size' => 'nullable|string',
+            'image' => 'nullable|image|max:10240', // 10MB limit
         ]);
 
         $imagePath = null;

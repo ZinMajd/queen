@@ -71,6 +71,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::apiResource('/dresses', \App\Http\Controllers\Api\Admin\DressController::class);
     Route::apiResource('/categories', \App\Http\Controllers\Api\Admin\CategoryController::class);
     Route::apiResource('/bookings', \App\Http\Controllers\Api\Admin\BookingController::class);
+    Route::post('/bookings/manual', [\App\Http\Controllers\Api\Admin\BookingController::class, 'storeManual']);
     
     // User Management
     Route::get('/users', [\App\Http\Controllers\Api\Admin\UserController::class, 'index']);

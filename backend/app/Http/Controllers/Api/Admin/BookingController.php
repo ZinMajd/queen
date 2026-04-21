@@ -61,6 +61,31 @@ class BookingController extends Controller
         $booking = Booking::findOrFail($id);
         $booking->delete();
 
-        return response()->json(['message' => 'تم حذف الحجز بنجاح']);
+    }
+
+    /**
+     * Store manual booking from Admin
+     */
+    public function storeManual(Request $request)
+    {
+        $request->validate([
+            'dress_id' => 'required|exists:dresses,id',
+            'customer_name' => 'required|string',
+            'customer_phone' => 'required|string',
+            'booking_date' => 'required|date',
+        ]);
+
+        $booking = Booking::create([
+            'dress_id' => $request->dress_id,
+            'customer_name' => $request->customer_name,
+            'customer_phone' => $request->customer_phone,
+            'booking_date' => $request->booking_date,
+            'status' => 'confirmed'
+        ]);
+
+        return response()->json([
+            'message' => 'تم تسجيل الحجز اليدوي بنجاح',
+            'booking' => $booking->load('dress')
+        ], 201);
     }
 }

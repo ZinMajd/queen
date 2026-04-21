@@ -125,6 +125,21 @@ const DressList = () => {
     }
   };
 
+  const filteredDresses = Array.isArray(dresses) ? dresses.filter(dress => {
+    // Note: Category and Search are already handled by the server in fetchData
+    const matchesType = !filters.type || dress.type === filters.type;
+    const matchesSize = !filters.size || dress.size === filters.size;
+    
+    // Status translation from Arabic UI values to DB values
+    const statusMap = { 'متاح': 'available', 'محجوز': 'booked' };
+    const targetStatus = statusMap[filters.status] || filters.status;
+    const matchesStatus = !filters.status || dress.status === targetStatus || 
+                         (filters.status === 'محجوز' && dress.bookings_count > 0) ||
+                         (filters.status === 'متاح' && dress.bookings_count === 0);
+
+    return matchesType && matchesSize && matchesStatus;
+  }) : [];
+
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
       {/* Header / Search Area */}
@@ -332,7 +347,7 @@ const DressList = () => {
         ) : (
           <div className="flex flex-col gap-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
-              {Array.isArray(dresses) && dresses.map((dress) => (
+              {filteredDresses.map((dress) => (
                 /* ... rest of mapping ... */
                 <div key={dress.id} className="group bg-white rounded-4xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-700 border border-slate-100 flex flex-col">
                   {/* ... contents ... */}
@@ -370,6 +385,12 @@ const DressList = () => {
                     <p className="text-slate-500 text-sm leading-relaxed mb-8">
                       {dress.description}
                     </p>
+                    {dress.price && (
+                        <div className="flex items-center gap-2 mb-6">
+                            <span className="text-3xl font-black text-slate-900">{dress.price}</span>
+                            <span className="text-slate-400 font-bold text-sm">ر.س</span>
+                        </div>
+                    )}
                     <div className="mt-auto pt-6 flex flex-col gap-3">
                       <div className="flex justify-between items-center text-sm font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
                          <span>نوع الفستان:</span>
@@ -380,8 +401,10 @@ const DressList = () => {
                          <span className="text-slate-900">{dress.size}</span>
                       </div>
                       <div className="flex justify-between items-center text-sm font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                         <span>تاريخ التوفر:</span>
-                         <span className={dress.status === 'متاح' ? 'text-green-600' : 'text-rose-600'}>{dress.status}</span>
+                         <span>الحالة:</span>
+                         <span className={dress.bookings_count > 0 ? 'text-rose-600' : 'text-green-600'}>
+                            {dress.bookings_count > 0 ? 'محجوز' : 'متاح'}
+                         </span>
                       </div>
                     </div>
                     

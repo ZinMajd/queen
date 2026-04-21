@@ -31,8 +31,14 @@ class Dress extends Model
         return $this->ratings()->avg('rating') ?: 0;
     }
 
+
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

@@ -237,6 +237,20 @@ const Services = () => {
           <div className="flex justify-center items-center py-40">
             <Loader2 className="animate-spin text-rose-600" size={64} />
           </div>
+        ) : Array.isArray(services) && services.length === 0 ? (
+          <div className="text-center py-40 bg-white rounded-4xl shadow-sm border border-slate-100 flex flex-col items-center">
+            <div className="bg-rose-50 p-8 rounded-full mb-8">
+                <Sparkles className="text-rose-300" size={80} />
+            </div>
+            <h3 className="text-3xl font-bold text-slate-800 mb-4">لا توجد خدمات في هذا القسم حالياً</h3>
+            <p className="text-slate-500 mb-8 max-w-md">نحن نقوم بتحديث قائمة خدماتنا باستمرار، يرجى التحقق من الأقسام الأخرى أو العودة لاحقاً.</p>
+            <button 
+                onClick={() => setFilters({...filters, service_type: ''})} 
+                className="bg-rose-600 text-white px-10 py-4 rounded-2xl font-bold shadow-lg hover:shadow-rose-200 transition-all hover:-translate-y-1"
+            >
+                عرض جميع الخدمات
+            </button>
+          </div>
         ) : (
           <div className="space-y-12">
             {Array.isArray(services) && services.map((service, index) => (

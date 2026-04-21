@@ -118,8 +118,8 @@ const DressDetails = () => {
               <h1 className="text-5xl md:text-6xl font-black text-slate-900 leading-tight mb-6">
                 {dress.name}
               </h1>
-              <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-xl text-sm font-bold border border-green-100">
-                <ShieldCheck size={18} /> {dress.status} في المعرض
+              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border ${dress.bookings_count > 0 ? 'bg-rose-50 text-rose-700 border-rose-100' : 'bg-green-50 text-green-700 border-green-100'}`}>
+                <ShieldCheck size={18} /> {dress.bookings_count > 0 ? 'محجوز حالياً' : 'متاح في المعرض'}
               </div>
             </div>
 
@@ -146,10 +146,15 @@ const DressDetails = () => {
             <div className="sticky bottom-6 lg:relative lg:bottom-0 space-y-4">
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="w-full bg-slate-900 hover:bg-rose-600 text-white py-6 rounded-4xl text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 hover:-translate-y-1 active:scale-95 group"
+                disabled={dress.bookings_count > 0}
+                className={`w-full py-6 rounded-4xl text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-4 active:scale-95 group ${
+                  dress.bookings_count > 0 
+                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                  : 'bg-slate-900 hover:bg-rose-600 text-white hover:-translate-y-1'
+                }`}
               >
-                <Calendar size={24} className="group-hover:rotate-12 transition-transform" />
-                حجز موعد
+                <Calendar size={24} className={dress.bookings_count > 0 ? '' : 'group-hover:rotate-12 transition-transform'} />
+                {dress.bookings_count > 0 ? 'هذا الفستان محجوز حالياً' : 'حجز موعد'}
               </button>
               
               <div className="flex gap-4">

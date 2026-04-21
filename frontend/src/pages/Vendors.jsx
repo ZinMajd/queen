@@ -97,9 +97,17 @@ const Vendors = () => {
           </div>
         ) : vendors.length === 0 ? (
           <div className="text-center py-40 bg-white rounded-4xl shadow-sm border border-slate-100 flex flex-col items-center">
-            <Search className="text-slate-200 mb-6" size={80} />
-            <h3 className="text-2xl font-bold text-slate-800">لا يوجد نتائج لبحثكِ</h3>
-            <p className="text-slate-500 mt-2">جربي كلمات بحث أخرى أو غيري القسم</p>
+            <div className="bg-rose-50 p-8 rounded-full mb-8">
+                <Search className="text-rose-300" size={80} />
+            </div>
+            <h3 className="text-3xl font-bold text-slate-800 mb-4">لا توجد نتائج لبحثكِ حالياً</h3>
+            <p className="text-slate-500 mb-8 max-w-md">نحن نقوم بتوسيع قائمة شركائنا باستمرار، يرجى تجربة كلمات بحث أخرى أو العودة لاحقاً.</p>
+            <button 
+                onClick={() => { setSearchTerm(''); setActiveCategory('all'); }} 
+                className="bg-rose-600 text-white px-10 py-4 rounded-2xl font-bold shadow-lg hover:shadow-rose-200 transition-all hover:-translate-y-1"
+            >
+                عرض جميع المزودين
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 animate-in fade-in duration-700">

@@ -15,7 +15,9 @@ class Booking extends Model
         'delivery_address',
         'payment_method',
         'total_amount',
-        'status'
+        'status',
+        'customer_name',
+        'customer_phone'
     ];
 
     public function user()

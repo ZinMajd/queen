@@ -22,7 +22,7 @@ const AdminLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const [user] = useState(() => {
+  const [user, setUser] = useState(() => {
     try {
       const storedUser = localStorage.getItem('user');
       if (storedUser && storedUser !== "undefined") {
@@ -34,13 +34,34 @@ const AdminLayout = () => {
     return null;
   });
 
+  const [isVerifying, setIsVerifying] = useState(true);
+
   useEffect(() => {
     if (!user) {
       navigate('/login');
-    } else if (user.role !== 'إدارة') {
-      navigate('/');
+    } else {
+      // Robust role check (Arabic/English + Case Insensitive)
+      const role = String(user.role || '').trim();
+      const isAdmin = role === 'إدارة' || role.toLowerCase() === 'admin';
+      
+      if (!isAdmin) {
+        navigate('/');
+      } else {
+        setIsVerifying(false);
+      }
     }
   }, [user, navigate]);
+
+  if (!user || isVerifying) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-16 h-16 border-4 border-rose-200 border-t-rose-600 rounded-full animate-spin"></div>
+          <p className="text-slate-500 font-bold animate-pulse italic">جاري التحقق من الصلاحيات...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleLogout = () => {
     localStorage.clear();
