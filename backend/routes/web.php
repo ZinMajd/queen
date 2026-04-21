@@ -23,8 +23,8 @@ Route::get('/', function () {
     }
 
     return response()->json([
-        'message' => 'Queen Wedding API is running - VERSION 3.0.0',
-        'version' => '3.0.0',
+        'message' => '!!! QUEEN SYSTEM V4 - TEST !!!',
+        'version' => '4.0.0',
         'status' => 'healthy'
     ]);
 });
