@@ -5,5 +5,8 @@
   "workspaces": [
     "frontend",
     "backend"
-  ]
+  ],
+  "scripts": {
+    "build": "echo 'No root build needed'"
+  }
 }
