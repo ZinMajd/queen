@@ -17,6 +17,7 @@ import {
   Settings
 } from 'lucide-react';
 import NotificationBell from './NotificationBell';
+import crownImg from '../assets/crown.jpeg';
 
 const AdminLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -88,8 +89,8 @@ const AdminLayout = () => {
       >
         <div className="p-8 flex items-center justify-between border-b border-white/5">
           <div className={`flex items-center gap-3 ${!isSidebarOpen && 'hidden'}`}>
-            <div className="w-10 h-10 bg-rose-600 rounded-2xl flex items-center justify-center rotate-12 group-hover:rotate-0 transition-transform">
-              <ShoppingBag className="text-white" size={24} />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden rotate-12 group-hover:rotate-0 transition-transform bg-white/10">
+              <img src={crownImg} alt="Crown" className="w-full h-full object-cover" />
             </div>
             <span className="text-2xl font-black tracking-tighter italic text-rose-500">الملكة</span>
           </div>
